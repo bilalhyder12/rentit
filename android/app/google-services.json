@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1055989974564",
+    "firebase_url": "https://login-demo-bhm.firebaseio.com",
+    "project_id": "login-demo-bhm",
+    "storage_bucket": "login-demo-bhm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055989974564:android:5bd38fee6e4c64f5543ab1",
+        "android_client_info": {
+          "package_name": "com.bhm.firebaselogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055989974564-vfk4p8dk5l0391b2oss9a5qr8nfs4k4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2kU_WO0f2eZhDYjyX9Q2VdPEFb9_L328"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055989974564-vfk4p8dk5l0391b2oss9a5qr8nfs4k4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
