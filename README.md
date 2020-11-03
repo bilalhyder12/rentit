@@ -1,6 +1,6 @@
-# firebaselogin
+# RentIt
 
-firebase_login
+RentIt
 
 ## Getting Started
 
