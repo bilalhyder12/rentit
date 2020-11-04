@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
 //          } ,
 //        )
         child: Text(
-          "Messages",
+          "New Update messeages",
           style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
         ),
       );
