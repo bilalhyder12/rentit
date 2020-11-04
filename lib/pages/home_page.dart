@@ -6,6 +6,7 @@ import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:flutter_login_demo/views/profile.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
+import 'payment_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -140,9 +141,25 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.aspect_ratio),
-              title: Text('Boost your Add'),
+              title: Text('Boost your Ad'),
               onTap: () => {Navigator.of(context).pop()},
             ),
+            ListTile(
+              leading: Icon(Icons.payment),
+              title: Text("Payment Page "),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentScreen(),
+                  ),
+                );
+              },
+            ),
+
+
+
+
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
