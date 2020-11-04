@@ -139,6 +139,11 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {Navigator.of(context).pop()},
             ),
             ListTile(
+              leading: Icon(Icons.aspect_ratio),
+              title: Text('Boost your Add'),
+              onTap: () => {Navigator.of(context).pop()},
+            ),
+            ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: signOut,
