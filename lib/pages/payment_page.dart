@@ -7,15 +7,13 @@ class PaymentScreen extends StatelessWidget {
     final expiryDateTextFieldController = TextEditingController();
     final cVCTextFieldController = TextEditingController();
     final holdersNameTextFieldController = TextEditingController();
-
+    double _fontSize = 16.0;
+    double _radius = 5;
+    double _radiusInner = 2.5;
+    double _padX = 15;
+    double _padY = 20;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: () {},
-        ),
         title: Text("Payment"),
       ),
       body: SingleChildScrollView(
@@ -26,39 +24,44 @@ class PaymentScreen extends StatelessWidget {
             Container(
               color: Colors.grey[350],
               child: Padding(
-                padding: const EdgeInsets.only(top: 20, bottom: 20),
+                padding: EdgeInsets.fromLTRB(_padX, _padY, _padX, _padY),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    SizedBox(width: 15),
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundColor: Colors.purple,
-                      child: CircleAvatar(
-                        radius: 5,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Text(
-                      "Credit Card (Stripe)",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 50),
                     Container(
-                      padding: EdgeInsets.all(2),
-                      constraints: BoxConstraints(maxWidth: 60),
-                      child: Image.asset("assets//visa.png"),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(2),
-                      constraints: BoxConstraints(maxWidth: 60),
-                      child: Image.asset("assets//mastercard.png"),
-                    ),
-                    SizedBox(width: 15),
+                        child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: _radius,
+                          backgroundColor: Colors.blue,
+                          child: CircleAvatar(
+                            radius: _radiusInner,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Text(
+                          "Credit Card",
+                          style: TextStyle(
+                            fontSize: _fontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    )),
+                    Container(child:Row(children: [
+                      Container(
+                        padding: EdgeInsets.all(2),
+                        constraints: BoxConstraints(maxWidth: 60),
+                        child: Image.asset("assets/visa.png"),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(2),
+                        constraints: BoxConstraints(maxWidth: 60),
+                        child: Image.asset("assets/mastercard.png"),
+                      ),
+                    ],))
                   ],
                 ),
               ),
@@ -70,10 +73,10 @@ class PaymentScreen extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(width: 18),
                   CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.orange,
+                    radius: _radius,
+                    backgroundColor: Colors.blue,
                     child: CircleAvatar(
-                      radius: 5,
+                      radius: _radiusInner,
                       backgroundColor: Colors.white,
                     ),
                   ),
@@ -81,7 +84,7 @@ class PaymentScreen extends StatelessWidget {
                   Text(
                     "Card Number",
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: _fontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -99,7 +102,7 @@ class PaymentScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   hintText: "1234 1234 1234 1234",
-                  hintStyle: TextStyle(fontSize: 18),
+                  hintStyle: TextStyle(fontSize: _fontSize),
                   contentPadding: EdgeInsets.only(
                     left: 10,
                     right: 10,
@@ -131,10 +134,10 @@ class PaymentScreen extends StatelessWidget {
                           children: [
                             SizedBox(width: 18),
                             CircleAvatar(
-                              radius: 10,
-                              backgroundColor: Colors.orange,
+                              radius: _radius,
+                              backgroundColor: Colors.blue,
                               child: CircleAvatar(
-                                radius: 5,
+                                radius: _radiusInner,
                                 backgroundColor: Colors.white,
                               ),
                             ),
@@ -142,7 +145,7 @@ class PaymentScreen extends StatelessWidget {
                             Text(
                               "Expiry Date",
                               style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: _fontSize,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -159,7 +162,6 @@ class PaymentScreen extends StatelessWidget {
                               ),
                               hintText: "MM/YY",
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
@@ -174,10 +176,10 @@ class PaymentScreen extends StatelessWidget {
                           children: [
                             SizedBox(width: 18),
                             CircleAvatar(
-                              radius: 10,
-                              backgroundColor: Colors.orange,
+                              radius: _radius,
+                              backgroundColor: Colors.blue,
                               child: CircleAvatar(
-                                radius: 5,
+                                radius: _radiusInner,
                                 backgroundColor: Colors.white,
                               ),
                             ),
@@ -185,7 +187,7 @@ class PaymentScreen extends StatelessWidget {
                             Text(
                               "CVC",
                               style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: _fontSize,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -202,7 +204,6 @@ class PaymentScreen extends StatelessWidget {
                               ),
                               hintText: "CVC",
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
@@ -220,10 +221,10 @@ class PaymentScreen extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(width: 18),
                   CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.orange,
+                    radius: _radius,
+                    backgroundColor: Colors.blue,
                     child: CircleAvatar(
-                      radius: 5,
+                      radius: _radiusInner,
                       backgroundColor: Colors.white,
                     ),
                   ),
@@ -231,7 +232,7 @@ class PaymentScreen extends StatelessWidget {
                   Text(
                     "Card holder's name",
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: _fontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -244,6 +245,7 @@ class PaymentScreen extends StatelessWidget {
                 controller: holdersNameTextFieldController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
+                  hintText: "Your Full Name",
                   // fillColor: Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -265,7 +267,7 @@ class PaymentScreen extends StatelessWidget {
                 child: Text(
                   "Proceed",
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: _fontSize,
                   ),
                 ),
                 shape: RoundedRectangleBorder(

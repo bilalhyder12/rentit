@@ -151,8 +151,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PaymentScreen(),
-                  ),
+                      builder: (context) =>PaymentScreen()),
                 );
               },
             ),
