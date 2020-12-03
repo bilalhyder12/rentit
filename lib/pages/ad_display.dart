@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_login_demo/data/ad_short.dart';
+import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shimmer/shimmer.dart';
@@ -23,7 +24,7 @@ class AdDisplay extends StatefulWidget {
 }
 
 class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
-  _AdDisplayState({Key key,this.selectedCategory});
+  _AdDisplayState({this.selectedCategory});
   TabController tabController;
   final String selectedCategory;
   double _size = 140;
@@ -54,7 +55,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
                 },
               );
     });
-    print("Total ads of user: "+user.length.toString());
+    print("Total ads of $selectedCategory: "+user.length.toString());
     //TODO: Get the ads (links) from database
     for(int i=0; i<adLinks.length;i++){
       await db.collection('ads').document(user[i]).collection('user_ads').document(adLinks[i]).get().then((value){
@@ -169,28 +170,16 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
                     ],
                   ),),
             onTap: () {
-              showDialog(
-                barrierDismissible: false,
-                context: context,
-                child: CupertinoAlertDialog(
-                  title: Column(
-                    children: <Widget>[
-                      Text("GridView"),
-                      Icon(
-                        Icons.favorite,
-                        color: Colors.green,
-                      ),
-                    ],
-                  ),
-                  content: Text("Selected Item $index"),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("OK"))
-                  ],
-                ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AdViewPage(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback,
+                      adUser:user[index],
+                      adLink: adLinks[index],
+                    )),
               );
             },
           );

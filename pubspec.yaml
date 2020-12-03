@@ -16,6 +16,7 @@ dependencies:
   flutter_absolute_path: ^1.0.6
   shimmer: ^1.1.1
   transparent_image: ^0.1.0
+  flutter_swiper: ^1.1.6
 
 dev_dependencies:
   flutter_test:
