@@ -280,7 +280,7 @@ class _HomeViewState extends State<HomeView> {
                       Icons.more,
                       color: Colors.white,),
                     onPressed: () {
-                      goToCategory("Others");
+                      goToCategory("Other");
                     },
                   ),
                 ),

@@ -155,10 +155,6 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-
-
-
-
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
@@ -319,15 +315,15 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.mail),
-            title: Text('Messages'),
+            label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('Profile'),
+            label: 'Profile',
           )
         ],
       ),
