@@ -420,6 +420,7 @@ class _UploadImagesState extends State<UploadImages> {
               {
                 widget.userId: FieldValue.arrayUnion([docRef.documentID.toString()]),
               },
+              merge: true,
             )
                 .then(
                   (doc) {
