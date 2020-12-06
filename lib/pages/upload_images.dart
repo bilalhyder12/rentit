@@ -412,7 +412,6 @@ class _UploadImagesState extends State<UploadImages> {
           );
 
           //TODO: Update category array
-          //print("id: "+docRef.documentID);
           if(docRef!=null){
             await db
                 .collection("app_data")
