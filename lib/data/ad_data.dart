@@ -7,6 +7,7 @@ class AdData {
   String category;
   double price;
   String duration;
+  DateTime date;
   List<String> imageURL;
 
   AdData({
@@ -19,6 +20,7 @@ class AdData {
     this.price,
     this.duration,
   }) {
+    date = null;
     imageURL = null;
   }
 }

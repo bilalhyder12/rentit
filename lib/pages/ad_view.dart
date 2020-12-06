@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_login_demo/data/ad_data.dart';
+import 'package:intl/intl.dart';
 
 class AdViewPage extends StatefulWidget {
   AdViewPage({Key key, this.auth, this.userId, this.logoutCallback, this.adUser,this.adLink})
@@ -75,6 +76,9 @@ class _AdViewPageState extends State<AdViewPage>{
           }
           else if(key=="duration") {
             data.duration=value;
+          }
+          else if(key=="dateUploaded") {
+            data.date=value.toDate();
           }
         },
       );
@@ -361,7 +365,26 @@ class _AdViewPageState extends State<AdViewPage>{
                             "assets/map.jpg",
                             fit: BoxFit.fitWidth,
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Date: "+ DateFormat.yMMMMd('en_US').format(data.date).toString(),
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            color: Colors.grey,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "Time: "+ DateFormat.jm().format(data.date).toString(),
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            color: Colors.grey,
+                            fontSize: 15,
+                          ),
+                        ),
                       ],
                     )
                   ],
