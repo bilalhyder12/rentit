@@ -79,18 +79,7 @@ class _AdViewPageState extends State<AdViewPage>{
         },
       );
     });
-
-    StorageReference dpRef = FirebaseStorage.instance.ref().child(
-      'dp/' + adUser,
-    );
-    dpRef.getDownloadURL().then(
-        (value) {
-          _dpImgURL = value;
-        },
-    ).catchError((e) {
-      print("could not get user's display picture");
-      print(e.toString());
-    });
+    getDisplayPicture();
     String fName ="",lName="";
     await db.collection("Users").document(adUser).get().then(
           (value) {
@@ -111,6 +100,22 @@ class _AdViewPageState extends State<AdViewPage>{
     );
     setState(() {
       debugPrint("ad loaded");
+    });
+  }
+
+  void getDisplayPicture(){
+    StorageReference dpRef = FirebaseStorage.instance.ref().child(
+      'dp/' + adUser,
+    );
+    dpRef.getDownloadURL().then(
+          (value) {
+            setState(() {
+              _dpImgURL = value;
+            });
+      },
+    ).catchError((e) {
+      print("could not get user's display picture");
+      print(e.toString());
     });
   }
 
