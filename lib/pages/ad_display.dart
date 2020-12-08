@@ -57,6 +57,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
     });
     print("Total ads of $selectedCategory: "+user.length.toString());
     //TODO: Get the ads (links) from database
+
     for(int i=0; i<adLinks.length;i++){
       await db.collection('ads').document(user[i]).collection('user_ads').document(adLinks[i]).get().then((value){
         AdShort temp = new AdShort();
