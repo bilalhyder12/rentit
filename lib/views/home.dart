@@ -171,11 +171,11 @@ class _HomeViewState extends State<HomeView> {
                   child: IconButton(
                     iconSize: 80,
                     icon: Icon(
-                      Icons.phone_android,
+                      Icons.miscellaneous_services_rounded,
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      goToCategory("Mobile");
+                      goToCategory("Services");
                     },
                   ),
                 ),
