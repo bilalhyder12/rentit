@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_demo/chat/chat_room.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_login_demo/data/ad_data.dart';
@@ -17,13 +18,13 @@ class AdViewPage extends StatefulWidget {
   final String adLink;
 
   @override
-  State<StatefulWidget> createState() => _AdViewPageState(adUser: adUser,adLink:adLink);
+  State<StatefulWidget> createState() => _AdViewPageState(sellerId: adUser,adLink:adLink);
 }
 
 class _AdViewPageState extends State<AdViewPage>{
-  _AdViewPageState({this.adUser,this.adLink});
+  _AdViewPageState({this.sellerId,this.adLink});
 
-  final String adUser;
+  final String sellerId;
   final String adLink;
   String name = "";
   String _dpImgURL = "";
@@ -39,7 +40,7 @@ class _AdViewPageState extends State<AdViewPage>{
   }
 
   void initialize() async{
-    await db.collection('ads').document(adUser).collection('user_ads').document(adLink).get().then((value){
+    await db.collection('ads').document(sellerId).collection('user_ads').document(adLink).get().then((value){
       data.uid = adLink;
       value.data.forEach(
             (key, value) {
@@ -85,7 +86,7 @@ class _AdViewPageState extends State<AdViewPage>{
     });
     getDisplayPicture();
     String fName ="",lName="";
-    await db.collection("Users").document(adUser).get().then(
+    await db.collection("Users").document(sellerId).get().then(
           (value) {
         if (value.data.containsKey("fName")) {
           value.data.forEach(
@@ -109,7 +110,7 @@ class _AdViewPageState extends State<AdViewPage>{
 
   void getDisplayPicture(){
     StorageReference dpRef = FirebaseStorage.instance.ref().child(
-      'dp/' + adUser,
+      'dp/' + sellerId,
     );
     dpRef.getDownloadURL().then(
           (value) {
@@ -310,11 +311,21 @@ class _AdViewPageState extends State<AdViewPage>{
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.navigate_next),
+                              icon: Icon(Icons.chat),
                               color: Colors.blue,
-                              iconSize: 50,
+                              iconSize: 30,
                               onPressed: () {
-                                debugPrint("Take to user profile");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                        userId: widget.userId,
+                                        auth: widget.auth,
+                                        logoutCallback: widget.logoutCallback,
+                                        sellerId: sellerId,
+                                        adId: adLink,
+                                      )),
+                                );
                               },
                             ),
                           ],
