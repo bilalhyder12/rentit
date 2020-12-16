@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage>
   var cnic = "";
   var dob = "";
 
-  final dpSize = 110.0;
+  final _dpSize = 150.0;
 
   @override
   void initState() {
@@ -171,15 +171,15 @@ class _ProfilePageState extends State<ProfilePage>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Container(
-                                width: 150.0,
-                                height: 150.0,
+                                width: _dpSize,
+                                height: _dpSize,
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                    image: ExactAssetImage('assets/as.png'),
-                                    fit: BoxFit.cover,
+                                    image: _dpImgURL == "" ? ExactAssetImage('assets/as.png'):NetworkImage(_dpImgURL),
+                                    fit: BoxFit.contain,
                                   ),
-                                )),
+                                ),),
                           ],
                         ),
                         Padding(
