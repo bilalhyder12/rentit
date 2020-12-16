@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/pages/post_ad.dart';
+import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:flutter_login_demo/views/profile.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -122,7 +123,13 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.verified_user),
               title: Text('Profile'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>ProfilePage(userId: widget.userId,auth: widget.auth)),
+                );
+                },
             ),
             ListTile(
               leading: Icon(Icons.settings),
@@ -176,7 +183,6 @@ class _HomePageState extends State<HomePage> {
       return ProfileView(
         userId: widget.userId,
         auth: widget.auth,
-        logoutCallback: widget.logoutCallback,
       );
     }
     else if (pageName == "Messages") {
@@ -234,7 +240,7 @@ class _HomePageState extends State<HomePage> {
       controller: _searchQueryController,
       autofocus: true,
       decoration: InputDecoration(
-        hintText: "Search Data...",
+        hintText: "Search Ads...",
         border: InputBorder.none,
         hintStyle: TextStyle(color: Colors.white30),
       ),

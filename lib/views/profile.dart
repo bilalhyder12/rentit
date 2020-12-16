@@ -8,11 +8,10 @@ import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 
 class ProfileView extends StatefulWidget {
-  ProfileView({Key key, this.auth, this.userId, this.logoutCallback})
+  ProfileView({Key key, this.auth, this.userId})
       : super(key: key);
 
   final BaseAuth auth;
-  final VoidCallback logoutCallback;
   final String userId;
 
   @override
