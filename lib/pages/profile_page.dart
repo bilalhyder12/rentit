@@ -190,10 +190,10 @@ class _ProfilePageState extends State<ProfilePage>
                                 CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   radius: 25.0,
-                                  child: Icon(
+                                  child: IconButton(icon:Icon(
                                     Icons.camera_alt,
                                     color: Colors.white,
-                                  ),
+                                  ),onPressed: ()=>{selectAndUpload()},),
                                 )
                               ],
                             )),
@@ -574,5 +574,47 @@ class _ProfilePageState extends State<ProfilePage>
       print("Error getting dp url");
       print(e.toString());
     });
+  }
+
+  void selectAndUpload() async {
+    chooseImage().then((result) {
+      if (_image != null) {
+        uploadImage();
+      }
+    });
+  }
+  Future chooseImage() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 200)
+        .then((image) async {
+      if (image != null && await image.exists()) {
+        print("image selected");
+        setState(() {
+          _image = image;
+        });
+        //other code
+      } else {
+        print("image not selected");
+        //other code
+      }
+    }).catchError((error) {
+      print("Error: " + error.toString());
+    });
+  }
+
+  Future uploadImage() async {
+    StorageReference storageReference =
+    FirebaseStorage.instance.ref().child('dp/' + widget.userId);
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print(_image);
+    storageReference.getDownloadURL().then(
+          (fileURL) {
+        setState(
+              () {
+            _dpImgURL = fileURL;
+          },
+        );
+      },
+    );
   }
 }
