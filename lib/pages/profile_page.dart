@@ -43,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage>
   void initState() {
     super.initState();
     doesUserAlreadyExist(widget.userId.toString());
+
   }
 
   void doesUserAlreadyExist(String name) async {
