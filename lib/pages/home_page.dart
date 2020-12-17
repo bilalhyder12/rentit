@@ -302,8 +302,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: navDrawer(),
       appBar: AppBar(
-        title:
-            _isSearching ? _buildSearchField() : Center(child: Text("Testing")),
+        title: Text("Rent-It"),
         actions: _buildActions(),
       ),
       body: getView(_pages[_selectedTabIndex]),
