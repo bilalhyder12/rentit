@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/pages/post_ad.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
+import 'package:flutter_login_demo/services/search_ad.dart';
 import 'package:flutter_login_demo/views/profile.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
@@ -303,7 +304,12 @@ class _HomePageState extends State<HomePage> {
       drawer: navDrawer(),
       appBar: AppBar(
         title: Text("Rent-It"),
-        actions: _buildActions(),
+        actions: [IconButton(
+          icon: Icon(Icons.search,color: Colors.white,),
+          onPressed: (){
+            showSearch(context: context, delegate: SearchAd());
+          },
+        )],
       ),
       body: getView(_pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
