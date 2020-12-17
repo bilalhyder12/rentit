@@ -26,10 +26,6 @@ class _HomePageState extends State<HomePage> {
 
   bool fabClicked = false;
 
-  TextEditingController _searchQueryController = TextEditingController();
-  bool _isSearching = false;
-  String searchQuery = "Search query";
-
   int _selectedTabIndex = 0;
 
   List<String> _pages = [
@@ -151,8 +147,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>PaymentScreen()),
+                  MaterialPageRoute(builder: (context) => PaymentScreen()),
                 );
               },
             ),
@@ -172,15 +167,13 @@ class _HomePageState extends State<HomePage> {
   Widget getView(String pageName) {
     if (pageName == "Home") {
       return HomeView();
-    }
-    else if (pageName == "Profile") {
+    } else if (pageName == "Profile") {
       return ProfileView(
-        userId: widget.userId,
-        auth: widget.auth,
-        logoutCallback: widget.logoutCallback,
-      );
-    }
-    else if (pageName == "Messages") {
+          userId: widget.userId,
+          auth: widget.auth,
+          logoutCallback: widget.logoutCallback,
+        );
+    } else if (pageName == "Messages") {
       return Center(
 //        child:
 //        RaisedButton(
@@ -199,117 +192,23 @@ class _HomePageState extends State<HomePage> {
     return Text("Error: 404");
   }
 
-//  void testUpload() async {
-//   DocumentReference df = db
-//        .collection("app_data")
-//        .document();
-//   df.
-//        setData({
-//          "test":"testing"
-//      },
-//    )
-//        .then(
-//          (doc) {
-//        print("Ad Uploaded");
-//      },
-//    )
-//        .timeout(Duration(seconds: 5))
-//        .catchError(
-//          (error) {
-//        print("Ad upload error: "+error.toString());
-//
-//      },
-//    );
-//
-//   if(df == null) {
-//     print("-------------is null");
-//   }
-//   else{
-//     print("-------------is not null");
-//     print("-------------id is: "+df.documentID.toString());
-//   }
-//  }
-
-  Widget _buildSearchField() {
-    return TextField(
-      controller: _searchQueryController,
-      autofocus: true,
-      decoration: InputDecoration(
-        hintText: "Search Data...",
-        border: InputBorder.none,
-        hintStyle: TextStyle(color: Colors.white30),
-      ),
-      style: TextStyle(color: Colors.white, fontSize: 16.0),
-      onChanged: (query) => updateSearchQuery,
-    );
-  }
-
-  List<Widget> _buildActions() {
-    if (_isSearching) {
-      return <Widget>[
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            if (_searchQueryController == null ||
-                _searchQueryController.text.isEmpty) {
-              Navigator.pop(context);
-              return;
-            }
-            _clearSearchQuery();
-          },
-        ),
-      ];
-    }
-
-    return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-    ];
-  }
-
-  void _startSearch() {
-    ModalRoute.of(context)
-        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
-    setState(() {
-      _isSearching = true;
-    });
-  }
-
-  void updateSearchQuery(String newQuery) {
-    setState(() {
-      searchQuery = newQuery;
-    });
-  }
-
-  void _stopSearching() {
-    _clearSearchQuery();
-
-    setState(() {
-      _isSearching = false;
-    });
-  }
-
-  void _clearSearchQuery() {
-    setState(() {
-      _searchQueryController.clear();
-      updateSearchQuery("");
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: navDrawer(),
       appBar: AppBar(
         title: Text("Rent-It"),
-        actions: [IconButton(
-          icon: Icon(Icons.search,color: Colors.white,),
-          onPressed: (){
-            showSearch(context: context, delegate: SearchAd());
-          },
-        )],
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showSearch(context: context, delegate: SearchAd());
+            },
+          )
+        ],
       ),
       body: getView(_pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
@@ -333,16 +232,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: fabClicked ? Colors.grey: Colors.blue,
+        backgroundColor: fabClicked ? Colors.grey : Colors.blue,
         tooltip: "Post Ad",
         onPressed: () {
-          if(!fabClicked) {
+          if (!fabClicked) {
             setState(() {
               fabClicked = true;
             });
             postAdButtonClick();
           }
-
         },
         child: Icon(Icons.add),
       ),
