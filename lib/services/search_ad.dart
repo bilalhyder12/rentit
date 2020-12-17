@@ -60,6 +60,9 @@ class SearchAd extends SearchDelegate<String> {
           return ListView(children: snapshot.data.documents.map((DocumentSnapshot doc){
             return ListTile(
               title: Text(doc['title']),
+              onTap: (){
+                query = doc['title'];
+              },
             );
           }).toList(),);
         });
