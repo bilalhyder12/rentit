@@ -142,11 +142,6 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {Navigator.of(context).pop()},
             ),
             ListTile(
-              leading: Icon(Icons.folder),
-              title: Text('Your Ads'),
-              onTap: () => {Navigator.of(context).pop()},
-            ),
-            ListTile(
               leading: Icon(Icons.aspect_ratio),
               title: Text('Boost your Ad'),
               onTap: () => {Navigator.of(context).pop()},
