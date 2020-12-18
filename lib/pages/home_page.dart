@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   List<String> _pages = [
     "Home",
     "Messages",
-    "Profile",
+    "MyAds",
   ];
 
   var fntSize = 30.0;
