@@ -179,7 +179,7 @@ class _HomePageState extends State<HomePage> {
     if (pageName == "Home") {
       return HomeView();
     }
-    else if (pageName == "Profile") {
+    else if (pageName == "MyAds") {
       return MyAds(
         userId: widget.userId,
         auth: widget.auth,
@@ -328,8 +328,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Messages',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.list),
+            label: 'My Ads',
           )
         ],
       ),
