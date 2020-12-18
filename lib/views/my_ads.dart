@@ -84,7 +84,7 @@ class _MyAdsState extends State<MyAds> {
       ));
     }
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -185,6 +185,8 @@ class _MyAdsState extends State<MyAds> {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Container(
+                width: 50,
+                height: 50,
                 child: Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -194,7 +196,7 @@ class _MyAdsState extends State<MyAds> {
             case ConnectionState.done:
               return Container();
           }
-          if (!snapshot.hasData) return Text("No Active Ads");
+          if (!snapshot.hasData) return Center(child: Text("No Active Ads"),);
           return ListView(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
