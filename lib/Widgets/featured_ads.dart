@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 
 class FeaturedAds extends StatefulWidget {
-  FeaturedAds(
-      {Key key, this.auth, this.userId, this.logoutCallback})
+  FeaturedAds({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
   final BaseAuth auth;
   final VoidCallback logoutCallback;
@@ -40,127 +39,131 @@ class _FeaturedAdsState extends State<FeaturedAds> {
 //    "Clouds",
 //    "Landscape",
 //  ];
-  
-  List<Map<String,String>> owns = List<Map<String,String>>();
 
-  List<Widget> imageSliders =  List<Widget>();
+  List<Map<String, String>> owns = List<Map<String, String>>();
+
+  List<Widget> imageSliders = List<Widget>();
 
   void makeWidgetList() {
-    setState(() {
-      imageSliders = imgList.map((item) => Container(
-        child: Container(
-          margin: EdgeInsets.all(5.0),
-          child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              child: Stack(
-                children: <Widget>[
-                  Image.network(item, fit: BoxFit.cover, width: 700.0),
-                  Positioned(
-                    bottom: 0.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color.fromARGB(200, 0, 0, 0),
-                            Color.fromARGB(0, 0, 0, 0)
+    if (mounted) {
+      setState(() {
+        imageSliders = imgList
+            .map((item) => Container(
+                  child: Container(
+                    margin: EdgeInsets.all(5.0),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.network(item,
+                                fit: BoxFit.cover, width: 700.0),
+                            Positioned(
+                              bottom: 0.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(200, 0, 0, 0),
+                                      Color.fromARGB(0, 0, 0, 0)
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 20.0),
+                                child: Text(
+                                  imgName[imgList.indexOf(item)],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                        ),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                      child: Text(
-                        imgName[imgList.indexOf(item)],
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                        )),
                   ),
-                ],
-              )
-          ),
-        ),
-      )).toList();
-    });
-
+                ))
+            .toList();
+      });
+    }
   }
 
   void getAds() async {
-    var docRef = await db
-        .collection("featured")
-        .document("ads")
-        .get().catchError(
-          (error) {
-        print("error getting featured ads: "+error.toString());
+    var docRef =
+        await db.collection("featured").document("ads").get().catchError(
+      (error) {
+        print("error getting featured ads: " + error.toString());
       },
     );
-    if(docRef!=null) {
-      docRef.data.forEach((key, value) {
-        imgName.add(value["title"]);
-        imgList.add(value["thumb"]);
-        owns.add({'user':value["userUID"],'ad':value["adUID"]});
-        setState(() {
-          makeWidgetList();
-          isLoading = false;
+    if (docRef != null) {
+      if (mounted) {
+        docRef.data.forEach((key, value) {
+          imgName.add(value["title"]);
+          imgList.add(value["thumb"]);
+          owns.add({'user': value["userUID"], 'ad': value["adUID"]});
+          setState(() {
+            makeWidgetList();
+            isLoading = false;
+          });
+          print("list updated");
         });
-        print("list updated");
-      });
-    }
-    else {
+      }
+    } else {
       print("Error. Featured document empty");
     }
   }
-
 
   @override
   void initState() {
     getAds();
     super.initState();
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    if(isLoading == true) {
-      return Padding(child: CircularProgressIndicator(),padding: EdgeInsets.all(10),);
-    }
-    return Column(
-          children: [
-            CarouselSlider(
-              items: imageSliders,
-              options: CarouselOptions(
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  }
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: imgList.map((url) {
-                int index = imgList.indexOf(url);
-                return Container(
-                  width: _current == index ? 13 : 6.0,
-                  height: _current == index ? 13 : 6.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _current == index
-                        ? Colors.blue
-                        : Color.fromRGBO(0, 0, 0, 0.4),
-                  ),
-                );
-              }).toList(),
-            ),
-          ]
+    if (isLoading == true) {
+      return Padding(
+        child: CircularProgressIndicator(),
+        padding: EdgeInsets.all(10),
       );
+    }
+    return Column(children: [
+      CarouselSlider(
+        items: imageSliders,
+        options: CarouselOptions(
+            autoPlay: true,
+            enlargeCenterPage: true,
+            aspectRatio: 2.0,
+            onPageChanged: (index, reason) {
+              if (mounted) {
+                setState(() {
+                  _current = index;
+                });
+              }
+            }),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: imgList.map((url) {
+          int index = imgList.indexOf(url);
+          return Container(
+            width: _current == index ? 13 : 6.0,
+            height: _current == index ? 13 : 6.0,
+            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _current == index
+                  ? Colors.blue
+                  : Color.fromRGBO(0, 0, 0, 0.4),
+            ),
+          );
+        }).toList(),
+      ),
+    ]);
   }
 }
