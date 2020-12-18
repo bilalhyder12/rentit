@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
+import 'package:intl/intl.dart';
 
 class MyAds extends StatefulWidget {
   MyAds({Key key, this.auth, this.userId}) : super(key: key);
@@ -143,6 +144,10 @@ class _MyAdsState extends State<MyAds> {
                               ),
                               Text(
                                 "Rs. " + doc['price'].toString(),
+                              ),
+
+                              Text(
+                                doc['duration'].toString(),
                               )
                             ],
                           ),
@@ -154,7 +159,13 @@ class _MyAdsState extends State<MyAds> {
                 Positioned(
                   bottom: 5,
                   right: 5,
-                  child: Text("Date Added"),
+                  child: Text(
+                    DateFormat.yMMMMd('en_US')
+                        .format(doc['dateUploaded'].toDate())
+                        .toString(),
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic, color: Colors.grey),
+                  ),
                 ),
               ],
             ),
