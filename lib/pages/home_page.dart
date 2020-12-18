@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_login_demo/pages/post_ad.dart';
 import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
-import 'package:flutter_login_demo/views/profile.dart';
+import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
 import 'payment_page.dart';
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
       return HomeView();
     }
     else if (pageName == "Profile") {
-      return ProfileView(
+      return MyAds(
         userId: widget.userId,
         auth: widget.auth,
       );
