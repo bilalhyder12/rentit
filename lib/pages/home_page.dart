@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return Text("Error: 404");
+    return Center(child: Text("Error: 404"));
   }
 
   @override
