@@ -340,6 +340,26 @@ class _UploadImagesState extends State<UploadImages> {
     return _userAds;
   }
 
+  List<String> getSearchKeys(String title){
+    title = title.replaceAll(RegExp(r'[^\w\s]'),"");
+    title = title.toLowerCase();
+    List<String> words = title.split(" ");
+    List<String> searchKeys = new List<String>();
+
+    for(int c=0;c<words.length;c++){
+      String word = words[c];
+      for(int i=1;i<=word.length;i++){
+        searchKeys.add(word.substring(0,i));
+        if(c==0){
+          continue;
+        }
+        searchKeys.add(words[c-1]+" "+word.substring(0,i));
+      }
+      searchKeys.add(words.sublist(0,c).join(" "));
+    }
+    return searchKeys;
+  }
+
   Future<bool> uploadImagesToStorage() async {
     for (int i = 0; i < images.length; i++) {
       var path = await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
@@ -394,6 +414,7 @@ class _UploadImagesState extends State<UploadImages> {
               'city': widget.data.city,
               'imageURLs':imageURLs,
               'dateUploaded':FieldValue.serverTimestamp(),
+              'searchKeys':getSearchKeys(widget.data.title),
             },
           )
               .then(
@@ -411,7 +432,6 @@ class _UploadImagesState extends State<UploadImages> {
             },
           );
 
-          //TODO: Update category array
           if(docRef!=null){
             await db
                 .collection("app_data")
