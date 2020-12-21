@@ -162,7 +162,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
                       FadeInImage.memoryNetwork(
                         width: _size - 20,
                         height: _size - 20,
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.contain,
                         placeholder: kTransparentImage,
                         image: ads[index].thumbnail,
                       ),
