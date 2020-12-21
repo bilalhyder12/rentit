@@ -109,74 +109,98 @@ class _MyAdsState extends State<MyAds> {
       shrinkWrap: true,
       children: snapshot.data.documents
           .map(
-            (doc) => Card(
-              color: Colors.white70,
-              child: Stack(
-                children: [
-                  Container(
-                    height: 150,
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 110,
-                          width: 110,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            shape: BoxShape.rectangle,
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image:
-                                  NetworkImage(doc["imageURLs"][0].toString()),
+            (doc) => Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 150,
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 10,
+                          ),
+                          Container(
+                            height: 110,
+                            width: 110,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blue,
+                              ),
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.contain,
+                                image: NetworkImage(
+                                    doc["imageURLs"][0].toString()),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  doc['title'],
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
+                          Container(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    doc['title'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Rs. " + doc['price'].toString(),
-                                ),
-                                Text(
-                                  doc['duration'].toString(),
-                                )
-                              ],
+                                  Container(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Rs. ",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        doc['price'].toString(),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    doc['duration'].toString(),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 5,
-                    right: 5,
-                    child: Text(
-                      DateFormat.yMMMMd('en_US')
-                          .format(doc['dateUploaded'].toDate())
-                          .toString(),
-                      style: TextStyle(
-                          fontStyle: FontStyle.italic, color: Colors.grey),
+                    Positioned(
+                      bottom: 5,
+                      right: 10,
+                      child: Text(
+                        DateFormat.yMMMMd('en_US')
+                            .format(doc['dateUploaded'].toDate())
+                            .toString(),
+                        style: TextStyle(
+                            fontStyle: FontStyle.normal, color: Colors.grey),
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              decoration: new BoxDecoration(
+                boxShadow: [
+                  new BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 10.0,
                   ),
                 ],
               ),
