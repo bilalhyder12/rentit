@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/pages/post_ad.dart';
+import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:flutter_login_demo/services/search_ad.dart';
-import 'package:flutter_login_demo/views/profile.dart';
+import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
 import 'payment_page.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   List<String> _pages = [
     "Home",
     "Messages",
-    "Profile",
+    "MyAds",
   ];
 
   var fntSize = 30.0;
@@ -119,7 +120,13 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.verified_user),
               title: Text('Profile'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>ProfilePage(userId: widget.userId,auth: widget.auth)),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings),
@@ -129,11 +136,6 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.border_color),
               title: Text('Feedback'),
-              onTap: () => {Navigator.of(context).pop()},
-            ),
-            ListTile(
-              leading: Icon(Icons.folder),
-              title: Text('Your Ads'),
               onTap: () => {Navigator.of(context).pop()},
             ),
             ListTile(
@@ -167,12 +169,11 @@ class _HomePageState extends State<HomePage> {
   Widget getView(String pageName) {
     if (pageName == "Home") {
       return HomeView();
-    } else if (pageName == "Profile") {
-      return ProfileView(
-          userId: widget.userId,
-          auth: widget.auth,
-          logoutCallback: widget.logoutCallback,
-        );
+    } else if (pageName == "MyAds") {
+      return MyAds(
+        userId: widget.userId,
+        auth: widget.auth,
+      );
     } else if (pageName == "Messages") {
       return Center(
 //        child:
@@ -226,8 +227,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Messages',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.list),
+            label: 'My Ads',
           )
         ],
       ),
