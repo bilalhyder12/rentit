@@ -40,30 +40,39 @@ class SearchAd extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return (query == null || query.trim() == "") ? Container():StreamBuilder<QuerySnapshot>(
-        stream: db
-            .collectionGroup("user_ads")
-            .where("searchKeys", arrayContains: query.trim()).snapshots(),
-        builder: (context, snapshot){
-          if(snapshot.hasError || !snapshot.hasData) {
-            return Container();
-          }
-          switch(snapshot.connectionState){
-            case ConnectionState.waiting:
-              return ListTile(title: Center(child: CircularProgressIndicator(),),);
+    return (query == null || query.trim() == "")
+        ? Container()
+        : StreamBuilder<QuerySnapshot>(
+            stream: db
+                .collectionGroup("user_ads")
+                .where("searchKeys", arrayContains: query.trim())
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError || !snapshot.hasData) {
+                return Container();
+              }
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return ListTile(
+                    title: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
 
-            case ConnectionState.none:
-            case ConnectionState.done:
-              return Container();
-          }
-          return ListView(children: snapshot.data.documents.map((DocumentSnapshot doc){
-            return ListTile(
-              title: Text(doc['title']),
-              onTap: (){
-                query = doc['title'];
-              },
-            );
-          }).toList(),);
-        });
+                case ConnectionState.none:
+                case ConnectionState.done:
+                  return Container();
+              }
+              return ListView(
+                children: snapshot.data.documents.map((DocumentSnapshot doc) {
+                  return ListTile(
+                    title: Text(doc['title']),
+                    onTap: () {
+                      query = doc['title'];
+                    },
+                  );
+                }).toList(),
+              );
+            });
   }
 }
