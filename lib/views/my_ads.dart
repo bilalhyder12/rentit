@@ -96,82 +96,94 @@ class _MyAdsState extends State<MyAds> {
   }
 
   getAdItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.documents
-        .map(
-          (doc) => Card(
-            color: Colors.white70,
-            child: Stack(
-              children: [
-                Container(
-                  height: 150,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 110,
-                        width: 110,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                          ),
-                          shape: BoxShape.rectangle,
-                          image: DecorationImage(
-                            fit: BoxFit.contain,
-                            image: NetworkImage(doc["imageURLs"][0].toString()),
+    if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
+      return Center(
+        child: Text(
+          "No Active Ads",
+          style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+        ),
+      );
+    }
+    return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      children: snapshot.data.documents
+          .map(
+            (doc) => Card(
+              color: Colors.white70,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 150,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 110,
+                          width: 110,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              fit: BoxFit.contain,
+                              image:
+                                  NetworkImage(doc["imageURLs"][0].toString()),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                doc['title'],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
+                        Container(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  doc['title'],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                height: 10,
-                              ),
-                              Text(
-                                "Rs. " + doc['price'].toString(),
-                              ),
-
-                              Text(
-                                doc['duration'].toString(),
-                              )
-                            ],
+                                Container(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Rs. " + doc['price'].toString(),
+                                ),
+                                Text(
+                                  doc['duration'].toString(),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: 5,
-                  right: 5,
-                  child: Text(
-                    DateFormat.yMMMMd('en_US')
-                        .format(doc['dateUploaded'].toDate())
-                        .toString(),
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic, color: Colors.grey),
+                  Positioned(
+                    bottom: 5,
+                    right: 5,
+                    child: Text(
+                      DateFormat.yMMMMd('en_US')
+                          .format(doc['dateUploaded'].toDate())
+                          .toString(),
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, color: Colors.grey),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        )
-        .toList();
+          )
+          .toList(),
+    );
   }
 
   Widget getAdData() {
@@ -180,8 +192,20 @@ class _MyAdsState extends State<MyAds> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             print("error getting ads with query");
-            return Container();
+            return Center(
+              child: Text(
+                "Error Getting Ads",
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+              ),
+            );
           }
+          if (!snapshot.hasData)
+            return Center(
+              child: Text(
+                "No Active Ads",
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+              ),
+            );
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Container(
@@ -191,17 +215,11 @@ class _MyAdsState extends State<MyAds> {
                   child: CircularProgressIndicator(),
                 ),
               );
-
             case ConnectionState.none:
             case ConnectionState.done:
               return Container();
           }
-          if (!snapshot.hasData) return Center(child: Text("No Active Ads"),);
-          return ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            children: getAdItems(snapshot),
-          );
+          return getAdItems(snapshot);
         });
     return builder;
   }
