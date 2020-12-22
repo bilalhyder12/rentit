@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_login_demo/pages/search_display.dart';
 
 class SearchAd extends SearchDelegate<String> {
   final db = Firestore.instance;
@@ -7,7 +8,7 @@ class SearchAd extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear,color: Colors.white,),
         onPressed: () {
           if (query.isEmpty) {
             close(context, null);
@@ -19,10 +20,26 @@ class SearchAd extends SearchDelegate<String> {
     ];
   }
 
+  ThemeData appBarTheme(BuildContext context) {
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme.copyWith(
+      primaryColor: theme.primaryColor,
+      primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+      primaryColorBrightness: Brightness.light,
+      //Not working
+      primaryTextTheme: Theme.of(context).textTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
+    );
+  }
+
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back,color: Colors.white,),
       onPressed: () {
         close(context, null);
       },
@@ -31,11 +48,7 @@ class SearchAd extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-        child: Text(
-      query,
-      style: TextStyle(fontSize: 20),
-    ));
+    return SearchDisplay(query: query);
   }
 
   @override
