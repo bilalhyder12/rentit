@@ -120,28 +120,31 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.verified_user),
+              leading: Icon(Icons.verified_user,color: Colors.blue,),
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>ProfilePage(userId: widget.userId,auth: widget.auth)),
+                      builder: (context) => ProfilePage(
+                          userId: widget.userId, auth: widget.auth)),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () => {Navigator.of(context).pop()},
+              leading: Icon(Icons.add_circle_sharp,color: Colors.blue,),
+              title: Text('Post Ad'),
+              onTap: () {
+                if (!fabClicked) {
+                  setState(() {
+                    fabClicked = true;
+                  });
+                  postAdButtonClick();
+                }
+              },
             ),
             ListTile(
-              leading: Icon(Icons.border_color),
-              title: Text('Feedback'),
-              onTap: () => {Navigator.of(context).pop()},
-            ),
-            ListTile(
-              leading: Icon(Icons.aspect_ratio),
+              leading: Icon(Icons.aspect_ratio,color: Colors.blue,),
               title: Text('Boost your Ad'),
               onTap: () => {
                 showCupertinoModalBottomSheet(
@@ -152,7 +155,17 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(Icons.border_color,color: Colors.blue,),
+              title: Text('Feedback'),
+              onTap: () => {Navigator.of(context).pop()},
+            ),
+            ListTile(
+              leading: Icon(Icons.settings,color: Colors.blue,),
+              title: Text('Settings'),
+              onTap: () => {Navigator.of(context).pop()},
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app,color: Colors.blue,),
               title: Text('Logout'),
               onTap: signOut,
             ),
@@ -230,19 +243,19 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: fabClicked ? Colors.grey : Colors.blue,
-        tooltip: "Post Ad",
-        onPressed: () {
-          if (!fabClicked) {
-            setState(() {
-              fabClicked = true;
-            });
-            postAdButtonClick();
-          }
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: fabClicked ? Colors.grey : Colors.blue,
+      //   tooltip: "Post Ad",
+      //   onPressed: () {
+      //     if (!fabClicked) {
+      //       setState(() {
+      //         fabClicked = true;
+      //       });
+      //       postAdButtonClick();
+      //     }
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 
