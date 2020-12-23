@@ -7,7 +7,13 @@ import 'package:flutter_login_demo/data/ad_data.dart';
 import 'package:intl/intl.dart';
 
 class AdViewPage extends StatefulWidget {
-  AdViewPage({Key key, this.auth, this.userId, this.logoutCallback, this.adUser,this.adLink})
+  AdViewPage(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.adUser,
+      this.adLink})
       : super(key: key);
 
   final BaseAuth auth;
@@ -17,11 +23,12 @@ class AdViewPage extends StatefulWidget {
   final String adLink;
 
   @override
-  State<StatefulWidget> createState() => _AdViewPageState(adUser: adUser,adLink:adLink);
+  State<StatefulWidget> createState() =>
+      _AdViewPageState(adUser: adUser, adLink: adLink);
 }
 
-class _AdViewPageState extends State<AdViewPage>{
-  _AdViewPageState({this.adUser,this.adLink});
+class _AdViewPageState extends State<AdViewPage> {
+  _AdViewPageState({this.adUser, this.adLink});
 
   final String adUser;
   final String adLink;
@@ -29,8 +36,15 @@ class _AdViewPageState extends State<AdViewPage>{
   String _dpImgURL = "";
   final db = Firestore.instance;
 
-
-  AdData data=AdData(uid:"",title:"",desc:"",category:"",province:"",city:"",price:0,duration:"");
+  AdData data = AdData(
+      uid: "",
+      title: "",
+      desc: "",
+      category: "",
+      province: "",
+      city: "",
+      price: 0,
+      duration: "");
 
   @override
   void initState() {
@@ -38,64 +52,62 @@ class _AdViewPageState extends State<AdViewPage>{
     super.initState();
   }
 
-  void initialize() async{
-    await db.collection('ads').document(adUser).collection('user_ads').document(adLink).get().then((value){
+  void initialize() async {
+    await db
+        .collection('ads')
+        .document(adUser)
+        .collection('user_ads')
+        .document(adLink)
+        .get()
+        .then((value) {
       data.uid = adLink;
       value.data.forEach(
-            (key, value) {
-          if(key=="title") {
-            data.title=value;
-          }
-          else if(key=="price") {
-            data.price=double.parse(value.toString());
-          }
-          else if(key=="desc") {
-            data.desc=value;
-          }
-          else if(key=="imageURLs") {
+        (key, value) {
+          if (key == "title") {
+            data.title = value;
+          } else if (key == "price") {
+            data.price = double.parse(value.toString());
+          } else if (key == "desc") {
+            data.desc = value;
+          } else if (key == "imageURLs") {
             data.imageURL = new List<String>();
-            int i=0;
-            while(true) {
-              try{
+            int i = 0;
+            while (true) {
+              try {
                 data.imageURL.add(value[i]);
                 i++;
-              }catch(e){
+              } catch (e) {
                 break;
               }
             }
-
-          }
-          else if(key=="province") {
-            data.province=value;
-          }
-          else if(key=="city") {
-            data.city=value;
-          }
-          else if(key=="category") {
-            data.category=value;
-          }
-          else if(key=="duration") {
-            data.duration=value;
-          }
-          else if(key=="dateUploaded") {
-            data.date=value.toDate();
+          } else if (key == "province") {
+            data.province = value;
+          } else if (key == "address") {
+            data.address = value;
+          } else if (key == "city") {
+            data.city = value;
+          } else if (key == "category") {
+            data.category = value;
+          } else if (key == "duration") {
+            data.duration = value;
+          } else if (key == "dateUploaded") {
+            data.date = value.toDate();
           }
         },
       );
     });
     getDisplayPicture();
-    String fName ="",lName="";
+    String fName = "", lName = "";
     await db.collection("Users").document(adUser).get().then(
-          (value) {
+      (value) {
         if (value.data.containsKey("fName")) {
-          value.data.forEach(
-                (key, value) {
-              if (key == "fName") {
-                fName = value;
-              } else if (key == "lName") {
-                lName = value;
-              }}
-          );
+          value.data.forEach((key, value) {
+            if (key == "fName") {
+              fName = value;
+            } else if (key == "lName") {
+              lName = value;
+            }
+          });
 
           name = fName + " " + lName;
           print(name);
@@ -107,15 +119,15 @@ class _AdViewPageState extends State<AdViewPage>{
     });
   }
 
-  void getDisplayPicture(){
+  void getDisplayPicture() {
     StorageReference dpRef = FirebaseStorage.instance.ref().child(
-      'dp/' + adUser,
-    );
+          'dp/' + adUser,
+        );
     dpRef.getDownloadURL().then(
-          (value) {
-            setState(() {
-              _dpImgURL = value;
-            });
+      (value) {
+        setState(() {
+          _dpImgURL = value;
+        });
       },
     ).catchError((e) {
       print("could not get user's display picture");
@@ -123,277 +135,281 @@ class _AdViewPageState extends State<AdViewPage>{
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final double _thickness = 5;
     return Scaffold(
       appBar: AppBar(
-        title:data.title == "" ? Text("Loading Ad"): Text(data.title),
+        title: data.title == "" ? Text("Loading Ad") : Text(data.title),
       ),
-      body: data.title == "" ? Container():Container(
-        padding: const EdgeInsets.all(10),
-        width: screenSize.width,
-        height: screenSize.height,
-        decoration: BoxDecoration(color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: screenSize.height * 0.3,
-                child: Swiper(
-                  autoplay: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Image.network(
-                      data.imageURL[index],
-                      fit: BoxFit.fitHeight,
-                    );
-                  },
-                  itemCount: data.imageURL.length,
-                  // itemCount: 0,
-                  viewportFraction: 0.8,
-                  scale: 0.9,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(color: Colors.white),
-                width: screenSize.width,
+      body: data.title == ""
+          ? Container()
+          : Container(
+              padding: const EdgeInsets.all(10),
+              width: screenSize.width,
+              height: screenSize.height,
+              decoration: BoxDecoration(color: Colors.white),
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                         "Rs. "+data.price.toString(),
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.blue,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          data.duration,
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.blue,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                         data.desc,
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          data.city+","+data.province,
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.black54,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                    Container(
+                      height: screenSize.height * 0.3,
+                      child: Swiper(
+                        autoplay: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Image.network(
+                            data.imageURL[index],
+                            fit: BoxFit.fitHeight,
+                          );
+                        },
+                        itemCount: data.imageURL.length,
+                        // itemCount: 0,
+                        viewportFraction: 0.8,
+                        scale: 0.9,
+                      ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Divider(
-                      color: Colors.grey[400],
-                      thickness: _thickness,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Details",
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.blue,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        getDetailElement("City", data.city),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        getDetailElement("Province", data.province),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        getDetailElement("Category", data.category),
-
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Divider(
-                      color: Colors.grey[400],
-                      thickness: _thickness,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Seller Description",
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.blue,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Row(
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(color: Colors.white),
+                      width: screenSize.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                "Rs. " + data.price.toString(),
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.blue,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Text(
+                                data.duration,
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
                                 children: [
-                                  getDP(),
                                   SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        name.toUpperCase(),
-                                        style: TextStyle(
-                                          decoration: TextDecoration.none,
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "View Profile",
-                                        style: TextStyle(
-                                          decoration: TextDecoration.none,
-                                          color: Colors.black54,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],),
+                                    child:Text(
+                                    "Description: ",
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black54,
+                                      fontSize: 16,
+                                    ),
+                                  ),width: 95,),
+                                  Expanded(child: Text(
+                                    data.desc,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),)
                                 ],
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.navigate_next),
-                              color: Colors.blue,
-                              iconSize: 50,
-                              onPressed: () {
-                                debugPrint("Take to user profile");
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Colors.grey[400],
-                      thickness: _thickness,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Location",
-                              style: TextStyle(
-                                decoration: TextDecoration.none,
-                                color: Colors.blue,
-                                fontSize: 20,
+                              SizedBox(
+                                height: 5,
                               ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.location_on,
-                              color: Colors.blue,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: screenSize.width,
-                          height: 160,
-                          child: Image.asset(
-                            "assets/map.jpg",
-                            fit: BoxFit.fitWidth,
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    child:Text(
+                                      "Address: ",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),width: 95,),
+                                  Expanded(child: Text(
+                                    data.address,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),)
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Date: "+ DateFormat.yMMMMd('en_US').format(data.date).toString(),
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.grey,
-                            fontSize: 15,
+                          SizedBox(
+                            height: 15,
                           ),
-                        ),
-                        Text(
-                          "Time: "+ DateFormat.jm().format(data.date).toString(),
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: Colors.grey,
-                            fontSize: 15,
+                          Divider(
+                            color: Colors.grey[400],
+                            thickness: _thickness,
                           ),
-                        ),
-                      ],
-                    )
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Details",
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.blue,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              getDetailElement("Category", data.category),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              getDetailElement("Location", data.city+","+data.province),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Divider(
+                            color: Colors.grey[400],
+                            thickness: _thickness,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Seller Description",
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.blue,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        getDP(),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              name.toUpperCase(),
+                                              style: TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              "View Profile",
+                                              style: TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black54,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.navigate_next),
+                                    color: Colors.blue,
+                                    iconSize: 50,
+                                    onPressed: () {
+                                      debugPrint("Take to user profile");
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Divider(
+                            color: Colors.grey[400],
+                            thickness: _thickness,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                "Date: " +
+                                    DateFormat.yMMMMd('en_US')
+                                        .format(data.date)
+                                        .toString(),
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                "Time: " +
+                                    DateFormat.jm()
+                                        .format(data.date)
+                                        .toString(),
+                                style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -431,7 +447,7 @@ class _AdViewPageState extends State<AdViewPage>{
         ),
         shape: BoxShape.circle,
         image: DecorationImage(
-          fit: BoxFit.fill,
+          fit: BoxFit.contain,
           image: _dpImgURL != ""
               ? NetworkImage(_dpImgURL)
               : AssetImage("assets/user.png"),

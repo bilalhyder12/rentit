@@ -18,7 +18,7 @@ class AdPost extends StatefulWidget {
 }
 
 class _AdPostState extends State<AdPost> {
-  AdData data=AdData(uid:"",title:"",desc:"",category:"",province:"",city:"",price:0,duration:"");
+  AdData data=AdData(uid:"",title:"",desc:"",category:"",province:"",city:"",price:0,duration:"",address:"");
 
   static const List<String> _lendDuration = ['Per Day','Per Week','Per Month'];
   String _selectedDuration;
@@ -107,6 +107,7 @@ class _AdPostState extends State<AdPost> {
               _categories == null
                   ? _showCircularProgress()
                   : _showCategoryDropDown(),
+              _showAddressInput(),
               _showLocationDropDown(),
               _showButtons(),
               Padding(
@@ -194,6 +195,29 @@ class _AdPostState extends State<AdPost> {
         validator: (value) => value.isEmpty ? 'Price can\'t be empty' : null,
         onSaved: (value) => data.price=double.parse(value),
       ),
+    );
+  }
+
+  Widget _showAddressInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 2,
+        autofocus: false,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25.0),
+            borderSide: BorderSide(),
+          ),
+          hintText: 'Address',
+          contentPadding: EdgeInsets.fromLTRB(30, 30, 0, 0),
+          icon: Icon(Icons.description),
+        ),
+        //textAlign: TextAlign,
+        validator: (value) => value.isEmpty ? 'Address can\'t be empty' : null,
+        onSaved: (value) => data.address=value,
+      ),
+      // ),
     );
   }
 

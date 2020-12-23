@@ -410,6 +410,7 @@ class _UploadImagesState extends State<UploadImages> {
               'desc': widget.data.desc,
               'price': widget.data.price,
               'duration': widget.data.duration,
+              'address':widget.data.address,
               'province': widget.data.province,
               'city': widget.data.city,
               'imageURLs':imageURLs,
