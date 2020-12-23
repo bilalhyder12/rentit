@@ -382,7 +382,7 @@ class _UploadImagesState extends State<UploadImages> {
       bool fileExists = await _image.exists();
       if(fileExists) {
         StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('ads/' + widget.userId+"/"+images[i].name);
+        FirebaseStorage.instance.ref().child('ads/' + widget.userId+"/"+images[i].name+"_"+DateTime.now().toIso8601String());
         StorageUploadTask uploadTask = storageReference.putFile(_image);
         await uploadTask.onComplete;
         print(_image);
