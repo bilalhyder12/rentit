@@ -23,7 +23,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   int _expand = 1;
 
   final user = Firestore.instance.collection("Users");
@@ -31,10 +30,219 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _expand == 1 ? FeaturedAds(auth: this.widget.auth,userId: this.widget.userId,logoutCallback: this.widget.logoutCallback) : Text(""),
+        _expand == 1
+            ? FeaturedAds(
+                auth: this.widget.auth,
+                userId: this.widget.userId,
+                logoutCallback: this.widget.logoutCallback)
+            : Text(""),
         catTitle(),
-        _expand == -1 ? fullCategoryList():categoryList(),
+        SizedBox(
+          height: 10,
+        ),
+        debugSlider(),
+        // categoryListSlider(),
+        // _expand == -1 ? fullCategoryList():categoryList(),
       ],
+    );
+  }
+
+  Widget debugSlider() {
+    return SizedBox(
+      height: 120,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          color: Colors.blue.withOpacity(0.9),
+        ),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.laptop_mac,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Laptop");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                    "Laptop",
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                  )),
+                ],
+              ),
+            ),
+            Container(
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              padding: const EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.miscellaneous_services_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Services");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Services",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Camera");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Camera",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.home,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("House");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "House",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.directions_car,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Car");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Car",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.motorcycle,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Bike");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Bike",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue,
+              // ),
+              child: Column(
+                children: [
+                  IconButton(
+                    iconSize: 70,
+                    icon: Icon(
+                      Icons.more,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      goToCategory("Other");
+                    },
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Others",
+                        style:
+                        TextStyle(color: Colors.white, fontFamily: "Monospace"),
+                      )),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -56,11 +264,11 @@ class _HomeViewState extends State<HomeView> {
       context,
       MaterialPageRoute(
           builder: (context) => AdDisplay(
-            userId: widget.userId,
-            auth: widget.auth,
-            logoutCallback: widget.logoutCallback,
-            selectedCategory: selectedCat,
-          )),
+                userId: widget.userId,
+                auth: widget.auth,
+                logoutCallback: widget.logoutCallback,
+                selectedCategory: selectedCat,
+              )),
     );
   }
 
@@ -100,7 +308,8 @@ class _HomeViewState extends State<HomeView> {
                     iconSize: 80,
                     icon: Icon(
                       Icons.home,
-                      color: Colors.white,),
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       goToCategory("House");
                     },
@@ -133,12 +342,12 @@ class _HomeViewState extends State<HomeView> {
                   child: IconButton(
                     iconSize: 80,
                     icon: Icon(
-                      _expand == 1 ? Icons.expand_more:Icons.expand_less,
+                      _expand == 1 ? Icons.expand_more : Icons.expand_less,
                       color: Colors.white,
                     ),
                     onPressed: () {
                       setState(() {
-                       _expand *= -1;
+                        _expand *= -1;
                       });
                     },
                   ),
@@ -147,6 +356,126 @@ class _HomeViewState extends State<HomeView> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget categoryListSlider() {
+    return Container(
+      height: 200,
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+      ),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.miscellaneous_services_rounded,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Services");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.laptop_mac,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Laptop");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.camera_enhance,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Camera");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("House");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.directions_car,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Car");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.motorcycle,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Bike");
+              },
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.more,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                goToCategory("Other");
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -187,7 +516,8 @@ class _HomeViewState extends State<HomeView> {
                     iconSize: 80,
                     icon: Icon(
                       Icons.laptop_mac,
-                      color: Colors.white,),
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       goToCategory("Laptop");
                     },
@@ -228,7 +558,6 @@ class _HomeViewState extends State<HomeView> {
                     },
                   ),
                 ),
-
               ],
             ),
             Row(
@@ -264,7 +593,6 @@ class _HomeViewState extends State<HomeView> {
                     },
                   ),
                 ),
-
               ],
             ),
             Row(
@@ -278,7 +606,8 @@ class _HomeViewState extends State<HomeView> {
                     iconSize: 80,
                     icon: Icon(
                       Icons.more,
-                      color: Colors.white,),
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       goToCategory("Other");
                     },
@@ -291,7 +620,7 @@ class _HomeViewState extends State<HomeView> {
                   child: IconButton(
                     iconSize: 80,
                     icon: Icon(
-                      _expand == 1 ? Icons.expand_more:Icons.expand_less,
+                      _expand == 1 ? Icons.expand_more : Icons.expand_less,
                       color: Colors.white,
                     ),
                     onPressed: () {
@@ -308,5 +637,4 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-
 }
