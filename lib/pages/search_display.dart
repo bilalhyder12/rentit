@@ -40,6 +40,14 @@ class _SearchDisplayState extends State<SearchDisplay>
   }
 
   Widget getList() {
+    if (query.trim() == "" || query == null) {
+      return Center(
+        child: Text(
+          "Oops. Empty query string",
+          style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+        ),
+      );
+    }
     var gridView = StreamBuilder<QuerySnapshot>(
         stream: db
             .collectionGroup("user_ads")
@@ -55,13 +63,14 @@ class _SearchDisplayState extends State<SearchDisplay>
               ),
             );
           }
-          if (!snapshot.hasData)
+          if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
             return Center(
               child: Text(
                 "No Ads Found",
                 style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
               ),
             );
+          }
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Container(
