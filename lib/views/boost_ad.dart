@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
 
-enum BoostPlan { basic, pro, premium }
+enum BoostPlan { basic, pro, light }
 
 class BoostAd extends StatefulWidget {
   @override
@@ -75,16 +75,20 @@ class _BoostAdState extends State<BoostAd> {
   Widget getExpiry(var x) {
     return Expanded(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Expires: ",
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Colors.blue,
+              fontSize: 12,
+            ),
           ),
           Text(
             x.toString() + " days",
             style: TextStyle(
               color: Colors.white,
               fontStyle: FontStyle.italic,
+              fontSize: 12,
             ),
           )
         ],
@@ -97,30 +101,23 @@ class _BoostAdState extends State<BoostAd> {
       child: Padding(
           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 check ? Icons.check : Icons.clear,
                 color: check ? Colors.blue : Colors.red,
-                size: 20,
+                size: 12,
               ),
-              Container(
-                width: 7,
-              ),
-              Text(
+              Padding(padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),child: Text(
                 str,
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 12,
                 ),
                 textAlign: TextAlign.center,
-              ),
+              ),),
             ],
           )),
-    );
-  }
-
-  Widget verticalGap(double height) {
-    return Container(
-      height: height,
     );
   }
 
@@ -130,7 +127,7 @@ class _BoostAdState extends State<BoostAd> {
         "Rs." + price.toString(),
         style: TextStyle(
             color: Colors.blue,
-            fontSize: 25,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: "Monospace"),
       ),
@@ -157,6 +154,12 @@ class _BoostAdState extends State<BoostAd> {
     );
   }
 
+  Widget verticalGap(double height) {
+    return Container(
+      height: height,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,57 +180,59 @@ class _BoostAdState extends State<BoostAd> {
           verticalGap(20),
           Container(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 30),
               child: IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    Expanded(child:Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        getHeading("Basic"),
+                        getHeading("Light"),
                         verticalGap(30.0),
                         getDesc("Top of search\nlist", true),
                         getDesc("Featured ad\nlist", false),
                         getExpiry(5),
                         verticalGap(30.0),
                         getPrice(100),
-                        getRadio(BoostPlan.basic),
+                        getRadio(BoostPlan.light),
                       ],
-                    ),
+                    ),),
                     // VerticalDivider(
                     //   color: Colors.white,
                     //   thickness: 1.0,
                     //   width: 1,
                     // ),
-                    Column(
+            Expanded(child:Column(
                       children: [
-                        getHeading("Pro"),
+                        getHeading("Basic"),
                         verticalGap(30.0),
                         getDesc("Top of search\nlist", true),
                         getDesc("Featured ad\nlist", false),
                         getExpiry(10),
                         verticalGap(30.0),
                         getPrice(200),
-                        getRadio(BoostPlan.pro),
+                        getRadio(BoostPlan.basic),
                       ],
-                    ),
+                    ),),
                     // VerticalDivider(
                     //   color: Colors.white,
                     //   thickness: 1.0,
                     //   width: 1,
                     // ),
-                    Column(
+            Expanded(child:Column(
                       children: [
-                        getHeading("Premium"),
+                        getHeading("Pro"),
                         verticalGap(30.0),
                         getDesc("Top of search\nlist", true),
                         getDesc("Featured ad\nlist", true),
                         getExpiry(5),
                         verticalGap(30.0),
                         getPrice(400),
-                        getRadio(BoostPlan.premium),
+                        getRadio(BoostPlan.pro),
                       ],
-                    ),
+                    ),),
                   ],
                 ),
               ),
