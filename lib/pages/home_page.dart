@@ -152,16 +152,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.payment),
-              title: Text("Payment Page "),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaymentScreen()),
-                );
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: signOut,
