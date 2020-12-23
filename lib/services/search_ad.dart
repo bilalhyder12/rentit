@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_login_demo/pages/search_display.dart';
@@ -8,7 +9,10 @@ class SearchAd extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear,color: Colors.white,),
+        icon: Icon(
+          Icons.clear,
+          color: Colors.white,
+        ),
         onPressed: () {
           if (query.isEmpty) {
             close(context, null);
@@ -30,16 +34,19 @@ class SearchAd extends SearchDelegate<String> {
       primaryColorBrightness: Brightness.light,
       //Not working
       primaryTextTheme: Theme.of(context).textTheme.apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
-      ),
+            bodyColor: Colors.white,
+            displayColor: Colors.white,
+          ),
     );
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back,color: Colors.white,),
+      icon: Icon(
+        Icons.arrow_back,
+        color: Colors.white,
+      ),
       onPressed: () {
         close(context, null);
       },
@@ -79,7 +86,22 @@ class SearchAd extends SearchDelegate<String> {
               return ListView(
                 children: snapshot.data.documents.map((DocumentSnapshot doc) {
                   return ListTile(
-                    title: Text(doc['title']),
+                    title:  Text(
+                        doc['title'],
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    leading: IconButton(
+                      icon: Icon(CupertinoIcons.search,),
+                      onPressed: () {
+                        query = doc['title'];
+                      },
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(CupertinoIcons.arrow_up,),
+                      onPressed: () {
+                        query = doc['title'];
+                      },
+                    ),
                     onTap: () {
                       query = doc['title'];
                     },

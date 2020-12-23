@@ -355,8 +355,19 @@ class _UploadImagesState extends State<UploadImages> {
         }
         searchKeys.add(words[c-1]+" "+word.substring(0,i));
       }
+      if(c==0){
+        continue;
+      }
       searchKeys.add(words.sublist(0,c).join(" "));
+      searchKeys.add(words[c]);
     }
+    String cat = widget.data.category.toLowerCase();
+    for(int i=1;i<=cat.length;i++) {
+      print(cat.substring(0, i));
+      searchKeys.add(cat.substring(0, i));
+    }
+    searchKeys.add(title);
+    while(searchKeys.remove("value"));
     return searchKeys;
   }
 
