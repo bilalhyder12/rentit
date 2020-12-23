@@ -12,7 +12,6 @@ class LoginSignupPage extends StatefulWidget {
 }
 
 class _LoginSignupPageState extends State<LoginSignupPage> {
-
   final _formKey = GlobalKey<FormState>();
 
   String _email;
@@ -27,28 +26,33 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   @override
   Widget build(BuildContext context) {
     precacheImage(AssetImage("assets/background-resized.png"), context);
-    return Stack(children: <Widget>[
-      Image.asset(
-        "assets/background-resized.png",
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        fit: BoxFit.cover,
-      ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.all(_minimumPadding * 2),
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              _showForm(),
-              _showCircularProgress(),
-            ],
+    return GestureDetector(
+      child: Stack(
+        children: <Widget>[
+          Image.asset(
+            "assets/background-resized.png",
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            fit: BoxFit.cover,
           ),
-        ),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.all(_minimumPadding * 2),
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  _showForm(),
+                  _showCircularProgress(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-    ]);
+      onTap: () => {FocusScope.of(context).unfocus()},
+    );
   }
 
   // Check if form is valid before perform login or signup
@@ -62,6 +66,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   void validateAndSubmit() async {
+    FocusScope.of(context).unfocus();
     if (validateAndSave()) {
       setState(() {
         _errorMessage = "";
@@ -98,10 +103,10 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   @override
   void initState() {
+    super.initState();
     _errorMessage = "";
     _isLoading = false;
     _isLoginForm = true;
-    super.initState();
   }
 
   void resetForm() {
@@ -191,14 +196,16 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      return Center(child:Text(
-        _errorMessage,
-        style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
-      ),);
+      return Center(
+        child: Text(
+          _errorMessage,
+          style: TextStyle(
+              fontSize: 13.0,
+              color: Colors.red,
+              height: 1.0,
+              fontWeight: FontWeight.w300),
+        ),
+      );
     } else {
       return Container(
         height: 0.0,
@@ -265,7 +272,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   Widget _showForgotButton() {
     if (_isLoginForm) {
       return Padding(
-        padding:EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: FlatButton(
           child: Text("Forgot Password?",
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
@@ -281,11 +288,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   Widget showSecondaryButtons() {
     return SizedBox(
-      child:Column(children: <Widget>[
-        _showForgotButton(),
-        _showSecondaryButton()
-      ],)
-    );
+        child: Column(
+      children: <Widget>[_showForgotButton(), _showSecondaryButton()],
+    ));
   }
 
   Widget showPrimaryButton() {

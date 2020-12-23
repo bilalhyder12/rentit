@@ -83,7 +83,7 @@ class _AdPostState extends State<AdPost> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(child:Scaffold(
       appBar: AppBar(
         title: Text("Post New Ad"),
       ),
@@ -116,7 +116,7 @@ class _AdPostState extends State<AdPost> {
           ),
         ),
       ),
-    );
+    ),onTap: ()=>{FocusScope.of(context).unfocus()},);
   }
 
   Widget _showCircularProgress() {
@@ -268,6 +268,7 @@ class _AdPostState extends State<AdPost> {
   }
 
   void validateAndSubmit() {
+    FocusScope.of(context).unfocus();
     if (validateAndSave()) {
       Navigator.push(
         context,
@@ -313,6 +314,7 @@ class _AdPostState extends State<AdPost> {
                   ),
                 ),
                 hint: Text('Please Select A Category'),
+                onTap: ()=>{FocusScope.of(context).unfocus()},
                 value: _selectedCategory,
                 onChanged: (newValue) {
                   setState(() {
@@ -357,6 +359,7 @@ class _AdPostState extends State<AdPost> {
                 ),
                 hint: Text('Please Select Lend Duration'),
                 value: _selectedDuration,
+                onTap: ()=>{FocusScope.of(context).unfocus()},
                 onChanged: (newValue) {
                   setState(() {
                     _selectedDuration = newValue;
@@ -415,6 +418,7 @@ class _AdPostState extends State<AdPost> {
                   validator: (value) =>
                       value == null ? 'Price Select A City' : null,
                   onSaved: (value) => data.city=value,
+                  onTap: ()=>{FocusScope.of(context).unfocus()},
                 ),
               ),
             ),
@@ -459,6 +463,7 @@ class _AdPostState extends State<AdPost> {
                   borderSide: BorderSide(color: Colors.grey),
                 ),
               ),
+              onTap: ()=>{FocusScope.of(context).unfocus()},
               hint: Text('Please Choose Your Province'),
               value: _selectedProvince,
               onChanged: (newValue) {
