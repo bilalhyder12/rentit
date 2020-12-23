@@ -5,9 +5,11 @@ import 'package:flutter_login_demo/pages/post_ad.dart';
 import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:flutter_login_demo/services/search_ad.dart';
+import 'package:flutter_login_demo/views/boost_ad.dart';
 import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'payment_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -141,7 +143,13 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.aspect_ratio),
               title: Text('Boost your Ad'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  duration: Duration(milliseconds: 800),
+                  builder: (context) => BoostAd(),
+                )
+              },
             ),
             ListTile(
               leading: Icon(Icons.payment),
