@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_login_demo/data/ad_data.dart';
+import 'package:flutter_login_demo/services/string_caps.dart';
 import 'package:intl/intl.dart';
 
 class AdViewPage extends StatefulWidget {
@@ -138,10 +139,10 @@ class _AdViewPageState extends State<AdViewPage> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final double _thickness = 5;
+    final double _thickness = 2;
     return Scaffold(
       appBar: AppBar(
-        title: data.title == "" ? Text("Loading Ad") : Text(data.title),
+        title: data.title == "" ? Text("Loading Ad") : Text(data.title.capitalizeFirstofEach),
       ),
       body: data.title == ""
           ? Container()
@@ -185,11 +186,12 @@ class _AdViewPageState extends State<AdViewPage> {
                                 height: 15,
                               ),
                               Text(
-                                "Rs. " + data.price.toString(),
+                                "Rs. " + data.price.round().toString(),
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: Colors.blue,
                                   fontSize: 20,
+                                  fontWeight: FontWeight.bold
                                 ),
                               ),
                               Text(
@@ -387,7 +389,7 @@ class _AdViewPageState extends State<AdViewPage> {
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: Colors.grey,
-                                  fontSize: 15,
+                                  fontSize: 10,
                                 ),
                               ),
                               Text(
@@ -398,7 +400,7 @@ class _AdViewPageState extends State<AdViewPage> {
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: Colors.grey,
-                                  fontSize: 15,
+                                  fontSize: 10,
                                 ),
                               ),
                             ],

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_login_demo/data/ad_short.dart';
-import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 import 'package:flutter_login_demo/services/authentication.dart';
-
+import 'package:flutter_login_demo/services/string_caps.dart';
+import 'package:flutter_login_demo/data/ad_short.dart';
+import 'package:flutter_login_demo/pages/ad_view.dart';
 
 class AdDisplay extends StatefulWidget {
-  AdDisplay({Key key, this.auth, this.userId, this.logoutCallback, this.selectedCategory})
+  AdDisplay(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.selectedCategory})
       : super(key: key);
 
   final BaseAuth auth;
@@ -20,10 +24,11 @@ class AdDisplay extends StatefulWidget {
   final String selectedCategory;
 
   @override
-  State<StatefulWidget> createState() => _AdDisplayState(selectedCategory: selectedCategory);
+  State<StatefulWidget> createState() =>
+      _AdDisplayState(selectedCategory: selectedCategory);
 }
 
-class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
+class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
   _AdDisplayState({this.selectedCategory});
   TabController tabController;
   final String selectedCategory;
@@ -41,38 +46,45 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
     initialize();
   }
 
-  void initialize() async{
+  void initialize() async {
     //Get links of ads for selected category
-    await db.collection('app_data').document(selectedCategory).get().then(
-            (value) {
-              value.data.forEach(
-                    (key, value) {
-                 var test= value;
-                 for(int i=0;i<test.length;i++) {
-                    user.add(key);
-                    adLinks.add(test[i]);
-                 }
-                },
-              );
+    await db
+        .collection('app_data')
+        .document(selectedCategory)
+        .get()
+        .then((value) {
+      value.data.forEach(
+        (key, value) {
+          var test = value;
+          for (int i = 0; i < test.length; i++) {
+            user.add(key);
+            adLinks.add(test[i]);
+          }
+        },
+      );
     });
-    print("Total ads of $selectedCategory: "+user.length.toString());
+    print("Total ads of $selectedCategory: " + user.length.toString());
     //TODO: Get the ads (links) from database
 
-    for(int i=0; i<adLinks.length;i++){
-      await db.collection('ads').document(user[i]).collection('user_ads').document(adLinks[i]).get().then((value){
+    for (int i = 0; i < adLinks.length; i++) {
+      await db
+          .collection('ads')
+          .document(user[i])
+          .collection('user_ads')
+          .document(adLinks[i])
+          .get()
+          .then((value) {
         AdShort temp = new AdShort();
         temp.uid = adLinks[i];
         value.data.forEach(
-              (key, value) {
-            if(key=="title") {
-              temp.title=value;
-            }
-            else if(key=="price") {
+          (key, value) {
+            if (key == "title") {
+              temp.title = value;
+            } else if (key == "price") {
               print(value);
-              temp.price=value.toString();
-            }
-            else if(key=="imageURLs") {
-              temp.thumbnail=value[0];
+              temp.price = double.parse(value.toString());
+            } else if (key == "imageURLs") {
+              temp.thumbnail = value[0];
             }
           },
         );
@@ -84,15 +96,15 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
       _isLoading = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var toDisplay;
-    _isLoading == true ? toDisplay=getShimmer():toDisplay=getList();
+    _isLoading == true ? toDisplay = getShimmer() : toDisplay = getList();
     return toDisplay;
   }
 
-  Widget getList(){
+  Widget getList() {
     tabController = TabController(length: 2, vsync: this);
 
     var tabBarItem = TabBar(
@@ -151,36 +163,45 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
     var gridView = GridView.builder(
         itemCount: user.length,
         gridDelegate:
-        SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             child: Card(
               elevation: 5.0,
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
-                    children: <Widget>[
-                      FadeInImage.memoryNetwork(
-                        width: _size - 20,
-                        height: _size - 20,
-                        fit: BoxFit.contain,
-                        placeholder: kTransparentImage,
-                        image: ads[index].thumbnail,
-                      ),
-                      Text(ads[index].title,textAlign: TextAlign.left,),
-                      Text("Rs "+ads[index].price.toString(),textAlign: TextAlign.left,),
-                    ],
-                  ),),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  FadeInImage.memoryNetwork(
+                    width: _size - 20,
+                    height: _size - 20,
+                    fit: BoxFit.contain,
+                    placeholder: kTransparentImage,
+                    image: ads[index].thumbnail,
+                  ),
+                  Padding(
+                    child: Text(
+                      ads[index].title.capitalizeFirstofEach,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  ),
+                  Text("Rs " + ads[index].price.round().toString()),
+                ],
+              ),
+            ),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => AdViewPage(
-                      userId: widget.userId,
-                      auth: widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                      adUser:user[index],
-                      adLink: adLinks[index],
-                    )),
+                          userId: widget.userId,
+                          auth: widget.auth,
+                          logoutCallback: widget.logoutCallback,
+                          adUser: user[index],
+                          adLink: adLinks[index],
+                        )),
               );
             },
           );
@@ -190,7 +211,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Showing all '$selectedCategory' ads") ,
+          title: Text("Showing all '$selectedCategory' ads"),
           bottom: tabBarItem,
         ),
         body: TabBarView(
@@ -204,13 +225,13 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
     );
   }
 
-  Widget getShimmer(){
+  Widget getShimmer() {
     return Scaffold(
       appBar: AppBar(
         title: Text("Showing all '$selectedCategory' ads"),
       ),
-      body:Container(
-        child:Column(
+      body: Container(
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
@@ -230,7 +251,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
                             height: _size,
                             width: _size,
                           ),
-                          onTap: (){
+                          onTap: () {
                             print(index);
                           },
                         ),
@@ -240,7 +261,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin{
             ),
           ],
         ),
-      ),);
+      ),
+    );
   }
-
 }

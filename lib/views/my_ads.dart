@@ -5,12 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:intl/intl.dart';
-
-extension CapExtension on String {
-  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this.split(" ").map((str) => str.inCaps).join(" ");
-}
+import 'package:flutter_login_demo/services/string_caps.dart';
 
 class MyAds extends StatefulWidget {
   MyAds({Key key, this.auth, this.userId}) : super(key: key);

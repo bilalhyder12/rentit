@@ -1,7 +1,7 @@
 class AdShort {
   String uid;
   String title;
-  String price;
+  double price;
   String thumbnail;
 
   AdShort({
@@ -12,7 +12,7 @@ class AdShort {
   }){
     uid = "";
     title  = "";
-    price  = "";
+    price  = 0;
     thumbnail  = "";
   }
 
