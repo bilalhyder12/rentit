@@ -1,9 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:intl/intl.dart';
+
+extension CapExtension on String {
+  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
+  String get allInCaps => this.toUpperCase();
+  String get capitalizeFirstofEach => this.split(" ").map((str) => str.inCaps).join(" ");
+}
 
 class MyAds extends StatefulWidget {
   MyAds({Key key, this.auth, this.userId}) : super(key: key);
@@ -149,7 +156,7 @@ class _MyAdsState extends State<MyAds> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    doc['title'],
+                                    doc['title'].toString().capitalizeFirstofEach,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue,
@@ -186,11 +193,24 @@ class _MyAdsState extends State<MyAds> {
                       bottom: 5,
                       right: 10,
                       child: Text(
-                        DateFormat.yMMMMd('en_US')
+                        DateFormat.yMMMd('en_US')
                             .format(doc['dateUploaded'].toDate())
                             .toString(),
                         style: TextStyle(
                             fontStyle: FontStyle.normal, color: Colors.grey),
+                      ),
+                    ),
+                    Positioned(
+                      top: 5,
+                      right: 10,
+                      child: IconButton(
+                        icon: Icon(
+                          CupertinoIcons.delete,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          print("delete" + doc['title']);
+                        },
                       ),
                     ),
                   ],
