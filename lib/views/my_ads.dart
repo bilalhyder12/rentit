@@ -4,16 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
-import 'package:flutter_login_demo/pages/update_details.dart';
+import 'file:///C:/Users/Bilal/AndroidStudioProjects/rentit/lib/services/update_details.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
 import 'package:flutter_login_demo/services/delete_ads.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MyAds extends StatefulWidget {
-  MyAds({Key key, this.auth, this.userId}) : super(key: key);
+  MyAds({Key key, this.auth, this.userId, this.logoutCallback}) : super(key: key);
 
   final BaseAuth auth;
   final String userId;
+  final VoidCallback logoutCallback;
 
   @override
   State<StatefulWidget> createState() => new _MyAdsState();
@@ -73,12 +75,13 @@ class _MyAdsState extends State<MyAds> {
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UpdateDetails(
-                    userId: widget.userId,
-                  ),
+              showCupertinoModalBottomSheet(
+                context: context,
+                duration: Duration(milliseconds: 800),
+                builder: (context) => UpdateDetails(
+                  userId: widget.userId,
+                  auth: widget.auth,
+                  logoutCallback: widget.logoutCallback,
                 ),
               );
               //Navigator.of(context).pop();

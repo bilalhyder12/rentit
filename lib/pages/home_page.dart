@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/pages/post_ad.dart';
 import 'package:flutter_login_demo/pages/profile_page.dart';
-import 'package:flutter_login_demo/pages/update_details.dart';
+import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:flutter_login_demo/services/search_ad.dart';
 import 'package:flutter_login_demo/views/boost_ad.dart';
 import 'package:flutter_login_demo/views/my_ads.dart';
@@ -205,6 +205,7 @@ class _HomePageState extends State<HomePage> {
       return MyAds(
         userId: widget.userId,
         auth: widget.auth,
+        logoutCallback: widget.logoutCallback,
       );
     } else if (pageName == "Messages") {
       return Center(

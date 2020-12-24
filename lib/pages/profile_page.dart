@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
-import 'package:flutter_login_demo/pages/update_details.dart';
+import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ProfilePage extends StatefulWidget {

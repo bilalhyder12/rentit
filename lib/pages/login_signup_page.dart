@@ -238,7 +238,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           hintText: 'Email',
           icon: Icon(Icons.mail),
         ),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) => value.trim().isEmpty ? 'Email can\'t be empty' : null,
         onSaved: (value) => _email = value.trim(),
       ),
     );
@@ -255,7 +255,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           hintText: 'Password',
           icon: Icon(Icons.lock),
         ),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) => value.trim().isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value) => _password = value.trim(),
       ),
     );
