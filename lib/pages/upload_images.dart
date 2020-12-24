@@ -106,27 +106,6 @@ class _UploadImagesState extends State<UploadImages> {
     }
   }
 
-  Widget _showDismissButton() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-      child: SizedBox(
-        height: 40.0,
-        width: 150.0,
-        child: RaisedButton(
-          elevation: 5.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          color: Colors.grey,
-          child: Text(
-            "Dismiss",
-            style: TextStyle(fontSize: 20.0, color: Colors.white),
-          ),
-          onPressed: Navigator.of(context).pop,
-        ),
-      ),
-    );
-  }
-
   Widget _returnButton() {
     return SizedBox(
       width: 100,
@@ -211,13 +190,34 @@ class _UploadImagesState extends State<UploadImages> {
                   ),
                 ),
               ),
-              Center(child: _showDismissButton()),
+              Center(child: _showDismissButton(context)),
             ],
           ),
           shape: RoundedRectangleBorder(
               side: BorderSide.none, borderRadius: BorderRadius.circular(25.0)),
         );
       },
+    );
+  }
+
+  Widget _showDismissButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+      child: SizedBox(
+        height: 40.0,
+        width: 150.0,
+        child: RaisedButton(
+          elevation: 5.0,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          color: Colors.grey,
+          child: Text(
+            "Dismiss",
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
+          ),
+          onPressed: Navigator.of(context).pop,
+        ),
+      ),
     );
   }
 

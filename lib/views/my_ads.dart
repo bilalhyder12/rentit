@@ -6,6 +6,7 @@ import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
+import 'package:flutter_login_demo/services/delete_ads.dart';
 
 class MyAds extends StatefulWidget {
   MyAds({Key key, this.auth, this.userId}) : super(key: key);
@@ -204,7 +205,9 @@ class _MyAdsState extends State<MyAds> {
                           color: Colors.grey,
                         ),
                         onPressed: () {
-                          print("delete" + doc['title']);
+                          deleteAd(doc.reference.parent().parent().documentID,doc.documentID.toString(),);
+                          // print("adId: "+doc.documentID.toString());
+                          // print("userIDL "+doc.reference.parent().parent().documentID);
                         },
                       ),
                     ),
