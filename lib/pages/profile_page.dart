@@ -6,12 +6,14 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.auth, this.userId})
+  ProfilePage({Key key, this.auth, this.userId,this.logoutCallback})
       : super(key: key);
   final BaseAuth auth;
   final String userId;
+  final VoidCallback logoutCallback;
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -91,14 +93,23 @@ class _ProfilePageState extends State<ProfilePage>
                   style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UpdateDetails(
-                        userId: widget.userId,
-                      ),
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    duration: Duration(milliseconds: 800),
+                    builder: (context) => UpdateDetails(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback,
                     ),
                   );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => UpdateDetails(
+                  //       userId: widget.userId,
+                  //     ),
+                  //   ),
+                  // );
                   //Navigator.of(context).pop();
                 },
               ),

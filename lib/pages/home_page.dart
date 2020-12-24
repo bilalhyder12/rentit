@@ -10,7 +10,6 @@ import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'payment_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -120,19 +119,29 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.verified_user,color: Colors.blue,),
+              leading: Icon(
+                Icons.verified_user,
+                color: Colors.blue,
+              ),
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfilePage(
-                          userId: widget.userId, auth: widget.auth)),
+                    builder: (context) => ProfilePage(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback,
+                    ),
+                  ),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.add_circle_sharp,color: Colors.blue,),
+              leading: Icon(
+                Icons.add_circle_sharp,
+                color: Colors.blue,
+              ),
               title: Text('Post Ad'),
               onTap: () {
                 if (!fabClicked) {
@@ -144,7 +153,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.aspect_ratio,color: Colors.blue,),
+              leading: Icon(
+                Icons.aspect_ratio,
+                color: Colors.blue,
+              ),
               title: Text('Boost your Ad'),
               onTap: () => {
                 showCupertinoModalBottomSheet(
@@ -155,17 +167,26 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.border_color,color: Colors.blue,),
+              leading: Icon(
+                Icons.border_color,
+                color: Colors.blue,
+              ),
               title: Text('Feedback'),
               onTap: () => {Navigator.of(context).pop()},
             ),
             ListTile(
-              leading: Icon(Icons.settings,color: Colors.blue,),
+              leading: Icon(
+                Icons.settings,
+                color: Colors.blue,
+              ),
               title: Text('Settings'),
               onTap: () => {Navigator.of(context).pop()},
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app,color: Colors.blue,),
+              leading: Icon(
+                Icons.exit_to_app,
+                color: Colors.blue,
+              ),
               title: Text('Logout'),
               onTap: signOut,
             ),
@@ -201,7 +222,12 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return Center(child: Text("Error: 404"));
+    return Center(
+      child: Text(
+        "Error: Contact Developer.",
+        style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+      ),
+    );
   }
 
   @override
@@ -227,7 +253,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedTabIndex,
         onTap: _changeIndex,
         type: BottomNavigationBarType.fixed,
-        // this will be set when a new tab is tapped
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -413,16 +438,25 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UpdateDetails(
-                      userId: widget.userId,
-                      auth: widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                    ),
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  duration: Duration(milliseconds: 800),
+                  builder: (context) => UpdateDetails(
+                    userId: widget.userId,
+                    auth: widget.auth,
+                    logoutCallback: widget.logoutCallback,
                   ),
                 );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => UpdateDetails(
+                //       userId: widget.userId,
+                //       auth: widget.auth,
+                //       logoutCallback: widget.logoutCallback,
+                //     ),
+                //   ),
+                // );
                 //Navigator.of(context).pop();
               },
             ),

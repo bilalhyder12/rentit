@@ -38,7 +38,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(AssetImage("assets/background.png"), context);
+      precacheImage(AssetImage("assets/background-resized.png"), context);
     });
 
     DateTime current = DateTime.now();
@@ -48,15 +48,26 @@ class _UpdateDetailsState extends State<UpdateDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/background.png"),
-            fit: BoxFit.cover,
-          ),
+      appBar: AppBar(
+        title: Text('Update Details'),
+        leading: IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        alignment: Alignment.center,
-        child: Container(
+      ),
+      body:
+      // Container(
+      //   decoration: BoxDecoration(
+      //     image: DecorationImage(
+      //       image: AssetImage("assets/background-resized.png"),
+      //       fit: BoxFit.cover,
+      //     ),
+      //   ),
+      //   alignment: Alignment.center,
+      //   child:
+        Container(
           margin: EdgeInsets.all(_minimumPadding * 2),
           child: ListView(
             shrinkWrap: true,
@@ -65,7 +76,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
             ],
           ),
         ),
-      ),
+      // ),
     );
   }
 
@@ -77,12 +88,12 @@ class _UpdateDetailsState extends State<UpdateDetails> {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Center(
-                child: Text(
-                  "Update Details",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              ),
+              // Center(
+              //   child: Text(
+              //     "Update Details",
+              //     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              //   ),
+              // ),
               firstNameInput(),
               lastNameInput(),
               dobInput(),

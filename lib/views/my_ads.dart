@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/update_details.dart';
@@ -21,8 +22,8 @@ class MyAds extends StatefulWidget {
 class _MyAdsState extends State<MyAds> {
   final ad = Firestore.instance.collection("ads");
 
-  List adTitle = List();
   bool _userExists = true;
+  bool isDeleting = false;
 
   @override
   void initState() {
@@ -116,6 +117,7 @@ class _MyAdsState extends State<MyAds> {
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(color: Colors.grey, width: 1),
                 ),
                 color: Colors.white,
                 child: Stack(
@@ -134,6 +136,7 @@ class _MyAdsState extends State<MyAds> {
                               border: Border.all(
                                 color: Colors.blue,
                               ),
+                              borderRadius: BorderRadius.circular(5),
                               shape: BoxShape.rectangle,
                               image: DecorationImage(
                                 fit: BoxFit.contain,
@@ -152,7 +155,9 @@ class _MyAdsState extends State<MyAds> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    doc['title'].toString().capitalizeFirstofEach,
+                                    doc['title']
+                                        .toString()
+                                        .capitalizeFirstofEach,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue,
@@ -193,7 +198,7 @@ class _MyAdsState extends State<MyAds> {
                             .format(doc['dateUploaded'].toDate())
                             .toString(),
                         style: TextStyle(
-                            fontStyle: FontStyle.normal, color: Colors.grey),
+                            fontStyle: FontStyle.normal, color: Colors.black),
                       ),
                     ),
                     Positioned(
@@ -202,23 +207,39 @@ class _MyAdsState extends State<MyAds> {
                       child: IconButton(
                         icon: Icon(
                           CupertinoIcons.delete,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
-                        onPressed: () {
-                          deleteAd(doc.reference.parent().parent().documentID,doc.documentID.toString(),);
-                          // print("adId: "+doc.documentID.toString());
-                          // print("userIDL "+doc.reference.parent().parent().documentID);
-                        },
+                        disabledColor: Colors.grey,
+                        onPressed: isDeleting == true
+                            ? null
+                            : () {
+                                setState(() {
+                                  isDeleting = true;
+                                });
+                                deleteAd(
+                                  doc.reference.parent().parent().documentID,
+                                  doc.documentID.toString(),
+                                ).then(
+                                  (value) {
+                                    setState(() {
+                                      isDeleting=false;
+                                    });
+                                  },
+                                );
+                                // print("adId: "+doc.documentID.toString());
+                                // print("userIDL "+doc.reference.parent().parent().documentID);
+                              },
                       ),
                     ),
                   ],
                 ),
               ),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 boxShadow: [
-                  new BoxShadow(
+                  BoxShadow(
                     color: Colors.grey,
                     blurRadius: 10.0,
+                    spreadRadius: 1,
                   ),
                 ],
               ),
