@@ -31,3 +31,10 @@ flutter:
 
   assets:
     - assets/
+
+
+  fonts:
+    - family: MuktaRegular
+      fonts:
+        - asset: assets/Mukta-Regular.ttf
+

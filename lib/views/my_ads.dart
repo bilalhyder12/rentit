@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
-import 'file:///C:/Users/Bilal/AndroidStudioProjects/rentit/lib/services/update_details.dart';
+import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
 import 'package:flutter_login_demo/services/delete_ads.dart';

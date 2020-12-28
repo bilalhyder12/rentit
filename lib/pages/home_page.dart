@@ -6,6 +6,8 @@ import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:flutter_login_demo/services/search_ad.dart';
 import 'package:flutter_login_demo/views/boost_ad.dart';
+import 'package:flutter_login_demo/views/chat_room.dart';
+import 'package:flutter_login_demo/views/chat_room_list.dart';
 import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
@@ -184,6 +186,20 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(
+                Icons.chat,
+                color: Colors.blue,
+              ),
+              title: Text('Chat'),
+              onTap: () => {
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  duration: Duration(milliseconds: 800),
+                  builder: (context) => ChatRoom(),
+                )
+              },
+            ),
+            ListTile(
+              leading: Icon(
                 Icons.exit_to_app,
                 color: Colors.blue,
               ),
@@ -208,7 +224,12 @@ class _HomePageState extends State<HomePage> {
         logoutCallback: widget.logoutCallback,
       );
     } else if (pageName == "Messages") {
-      return Center(
+      return ChatRoomList(
+        auth: widget.auth,
+        userId: widget.userId,
+        logoutCallback: widget.logoutCallback,
+      );
+      // Center(
 //        child:
 //        RaisedButton(
 //          child: Text("TestUpload"),
@@ -216,11 +237,11 @@ class _HomePageState extends State<HomePage> {
 //            testUpload();
 //          } ,
 //        )
-        child: Text(
-          "New Update messeages",
-          style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
-        ),
-      );
+//         child: Text(
+//           "New Update messeages",
+//           style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+//         ),
+//       );
     }
 
     return Center(
