@@ -48,9 +48,9 @@ class _ChatRoomListState extends State<ChatRoomList> {
           _userExists = false;
         },
       );
-    }
-    else{
-      userName = documents.first.data["fName"]+" "+documents.first.data["lName"];
+    } else {
+      userName =
+          documents.first.data["fName"] + " " + documents.first.data["lName"];
       print(userName);
     }
   }
@@ -152,7 +152,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
   String getInitials(String name) {
     List<String> nameSeparated;
     nameSeparated = name.split(" ");
-    String initials="";
+    String initials = "";
     int i = 0;
     for (String separate in nameSeparated) {
       if (i >= 2) {
@@ -181,7 +181,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
           // DocumentSnapshot ad = db.collection('ads').document(doc['sellerId']).collection("user_ads").document(doc["adId"]).get();
           return ListTile(
             leading: CircleAvatar(
-              child:  userName.contains(doc["buyerName"])
+              child: userName.contains(doc["buyerName"])
                   ? Text(
                       getInitials(
                         doc["sellerName"],
@@ -202,19 +202,20 @@ class _ChatRoomListState extends State<ChatRoomList> {
             ),
             title: userName.contains(doc["buyerName"])
                 ? Text(
-                doc["sellerName"],
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            )
+                    doc["sellerName"],
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 : Text(
-                doc["buyerName"],
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
+                    doc["buyerName"],
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
             subtitle: doc["lastMessage"]["senderId"] == widget.userId
                 ? RichText(
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                       text: 'You: ',
                       style: TextStyle(color: Colors.black87),
@@ -226,7 +227,11 @@ class _ChatRoomListState extends State<ChatRoomList> {
                       ],
                     ),
                   )
-                : Text(doc["lastMessage"]["message"]),
+                : Text(
+                    doc["lastMessage"]["message"],
+                    style: TextStyle(color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
             trailing: Text(
               DateFormat.jm().format(
                 doc["lastMessage"]["time"].toDate(),
