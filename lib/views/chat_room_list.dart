@@ -4,10 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/services/update_details.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ChatRoomList extends StatefulWidget {
-  ChatRoomList({Key key, @required this.auth, @required this.userId, @required this.logoutCallback}) : super(key: key);
+  ChatRoomList(
+      {Key key,
+      @required this.auth,
+      @required this.userId,
+      @required this.logoutCallback})
+      : super(key: key);
 
   final BaseAuth auth;
   final String userId;
@@ -20,6 +26,7 @@ class ChatRoomList extends StatefulWidget {
 class _ChatRoomListState extends State<ChatRoomList> {
   final db = Firestore.instance;
 
+  String userName = "";
   bool _userExists = true;
 
   @override
@@ -37,10 +44,14 @@ class _ChatRoomListState extends State<ChatRoomList> {
     final List<DocumentSnapshot> documents = result.documents;
     if (documents.length != 1) {
       setState(
-            () {
+        () {
           _userExists = false;
         },
       );
+    }
+    else{
+      userName = documents.first.data["fName"]+" "+documents.first.data["lName"];
+      print(userName);
     }
   }
 
@@ -49,41 +60,41 @@ class _ChatRoomListState extends State<ChatRoomList> {
     if (!_userExists) {
       return Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Please add your complete details",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Please add your complete details",
+            style: TextStyle(
+              fontSize: 20,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            color: Colors.blue,
+            child: Text(
+              "Update",
+              style: TextStyle(fontSize: 15, color: Colors.white),
+            ),
+            onPressed: () {
+              showCupertinoModalBottomSheet(
+                context: context,
+                duration: Duration(milliseconds: 800),
+                builder: (context) => UpdateDetails(
+                  userId: widget.userId,
+                  auth: widget.auth,
+                  logoutCallback: widget.logoutCallback,
                 ),
-              ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Colors.blue,
-                child: Text(
-                  "Update",
-                  style: TextStyle(fontSize: 15, color: Colors.white),
-                ),
-                onPressed: () {
-                  showCupertinoModalBottomSheet(
-                    context: context,
-                    duration: Duration(milliseconds: 800),
-                    builder: (context) => UpdateDetails(
-                      userId: widget.userId,
-                      auth: widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                    ),
-                  );
-                  //Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ));
+              );
+              //Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ));
     }
     return Container(
       padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -99,10 +110,13 @@ class _ChatRoomListState extends State<ChatRoomList> {
 
   Widget getChatList() {
     var builder = StreamBuilder<QuerySnapshot>(
-        stream: db.collection("chat_rooms").where('users',arrayContains: widget.userId).snapshots(),
+        stream: db
+            .collection("chat_rooms")
+            .where('users', arrayContains: widget.userId)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            print("Rrror getting chat lists");
+            print("Error getting chat lists");
             return Center(
               child: Text(
                 "Error Getting Your Chats",
@@ -135,6 +149,21 @@ class _ChatRoomListState extends State<ChatRoomList> {
     return builder;
   }
 
+  String getInitials(String name) {
+    List<String> nameSeparated;
+    nameSeparated = name.split(" ");
+    String initials="";
+    int i = 0;
+    for (String separate in nameSeparated) {
+      if (i >= 2) {
+        break;
+      }
+      initials += separate.substring(0, 1).toUpperCase();
+      i++;
+    }
+    return initials;
+  }
+
   getChatListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     if (!snapshot.hasData || snapshot.data.documents.isEmpty) {
       return Center(
@@ -147,15 +176,65 @@ class _ChatRoomListState extends State<ChatRoomList> {
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      children: snapshot.data.documents
-          .map(
-            (doc) {
-              // incomplete db.collection('ads').document(doc['sellerId']).collection("collectionPath");
-                ListTile(title: Text("test")); 
-              },
-      )
-          .toList(),
+      children: snapshot.data.documents.map(
+        (doc) {
+          // DocumentSnapshot ad = db.collection('ads').document(doc['sellerId']).collection("user_ads").document(doc["adId"]).get();
+          return ListTile(
+            leading: CircleAvatar(
+              child:  userName.contains(doc["buyerName"])
+                  ? Text(
+                      getInitials(
+                        doc["sellerName"],
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      getInitials(
+                        doc["buyerName"],
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+              backgroundColor: Colors.blue,
+            ),
+            title: userName.contains(doc["buyerName"])
+                ? Text(
+                doc["sellerName"],
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            )
+                : Text(
+                doc["buyerName"],
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            subtitle: doc["lastMessage"]["senderId"] == widget.userId
+                ? RichText(
+                    text: TextSpan(
+                      text: 'You: ',
+                      style: TextStyle(color: Colors.black87),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: doc["lastMessage"]["message"],
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(doc["lastMessage"]["message"]),
+            trailing: Text(
+              DateFormat.jm().format(
+                doc["lastMessage"]["time"].toDate(),
+              ),
+            ),
+          );
+        },
+      ).toList(),
     );
   }
-
 }
