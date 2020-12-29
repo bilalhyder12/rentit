@@ -7,6 +7,8 @@ import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import 'chat_room.dart';
+
 class ChatRoomList extends StatefulWidget {
   ChatRoomList(
       {Key key,
@@ -51,7 +53,6 @@ class _ChatRoomListState extends State<ChatRoomList> {
     } else {
       userName =
           documents.first.data["fName"] + " " + documents.first.data["lName"];
-      print(userName);
     }
   }
 
@@ -178,66 +179,83 @@ class _ChatRoomListState extends State<ChatRoomList> {
       shrinkWrap: true,
       children: snapshot.data.documents.map(
         (doc) {
-          // DocumentSnapshot ad = db.collection('ads').document(doc['sellerId']).collection("user_ads").document(doc["adId"]).get();
           return ListTile(
-            leading: CircleAvatar(
-              child: userName.contains(doc["buyerName"])
-                  ? Text(
-                      getInitials(
-                        doc["sellerName"],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatRoom(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback,
+                      chatRoomId: doc.documentID,
+                    ),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                child: userName.contains(doc["buyerName"])
+                    ? Text(
+                        getInitials(
+                          doc["sellerName"],
+                        ),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        getInitials(
+                          doc["buyerName"],
+                        ),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                      style: TextStyle(
-                        color: Colors.white,
+                backgroundColor: Colors.blue,
+              ),
+              title: Text(
+                doc["adTitle"],
+                overflow: TextOverflow.ellipsis,
+              ),
+              // userName.contains(doc["buyerName"])
+              //     ? Text(
+              //         doc["sellerName"],
+              //         style: TextStyle(
+              //           color: Colors.black,
+              //         ),
+              //       )
+              //     : Text(
+              //         doc["buyerName"],
+              //         style: TextStyle(
+              //           color: Colors.black,
+              //         ),
+              //       ),
+              subtitle: doc["lastMessage"]["senderId"] == widget.userId
+                  ? RichText(
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: 'You: ',
+                        style: TextStyle(color: Colors.black87),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: doc["lastMessage"]["message"],
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
                     )
                   : Text(
-                      getInitials(
-                        doc["buyerName"],
+                      doc["lastMessage"]["message"],
+                      style: TextStyle(color: Colors.grey),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+              trailing:
+                 Text(
+                      DateFormat.jm().format(
+                        doc["lastMessage"]["time"].toDate(),
                       ),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
                     ),
-              backgroundColor: Colors.blue,
-            ),
-            title: userName.contains(doc["buyerName"])
-                ? Text(
-                    doc["sellerName"],
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  )
-                : Text(
-                    doc["buyerName"],
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-            subtitle: doc["lastMessage"]["senderId"] == widget.userId
-                ? RichText(
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      text: 'You: ',
-                      style: TextStyle(color: Colors.black87),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: doc["lastMessage"]["message"],
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                : Text(
-                    doc["lastMessage"]["message"],
-                    style: TextStyle(color: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-            trailing: Text(
-              DateFormat.jm().format(
-                doc["lastMessage"]["time"].toDate(),
-              ),
-            ),
-          );
+              );
         },
       ).toList(),
     );
