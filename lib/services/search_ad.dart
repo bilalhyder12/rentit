@@ -65,7 +65,7 @@ class SearchAd extends SearchDelegate<String> {
         : StreamBuilder<QuerySnapshot>(
             stream: db
                 .collectionGroup("user_ads")
-                .where("searchKeys", arrayContains: query.trim())
+                .where("searchKeys", arrayContainsAny: query.trim().split(" "))
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError || !snapshot.hasData) {

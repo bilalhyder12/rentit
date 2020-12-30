@@ -51,7 +51,7 @@ class _SearchDisplayState extends State<SearchDisplay>
     var gridView = StreamBuilder<QuerySnapshot>(
         stream: db
             .collectionGroup("user_ads")
-            .where("searchKeys", arrayContains: query.trim())
+            .where("searchKeys", arrayContainsAny: query.trim().split(" "))
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
