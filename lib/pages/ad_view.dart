@@ -136,6 +136,17 @@ class _AdViewPageState extends State<AdViewPage> {
     });
   }
 
+  void createChatRoom() async {
+    // final QuerySnapshot result = await Firestore.instance
+    //     .collection()
+    //     .where('UID', isEqualTo: name)
+    //     .limit(1)
+    //     .getDocuments();
+    // final List<DocumentSnapshot> documents = result.documents;
+    // return documents.length == 1;
+    //TODO: check and create chat room
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -355,11 +366,11 @@ class _AdViewPageState extends State<AdViewPage> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.navigate_next),
+                                    icon: Icon(Icons.chat),
                                     color: Colors.blue,
-                                    iconSize: 50,
+                                    iconSize: 30,
                                     onPressed: () {
-                                      debugPrint("Take to user profile");
+                                      createChatRoom();
                                     },
                                   ),
                                 ],
