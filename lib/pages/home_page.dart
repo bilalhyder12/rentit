@@ -186,20 +186,6 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(
-                Icons.chat,
-                color: Colors.blue,
-              ),
-              title: Text('Chat'),
-              onTap: () => {
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  duration: Duration(milliseconds: 800),
-                  builder: (context) => ChatRoom(),
-                )
-              },
-            ),
-            ListTile(
-              leading: Icon(
                 Icons.exit_to_app,
                 color: Colors.blue,
               ),
