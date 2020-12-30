@@ -35,7 +35,7 @@ class _ChatRoomState extends State<ChatRoom> {
             .collection("chat_rooms")
             .document(widget.chatRoomId)
             .collection("chats")
-            .orderBy("time")
+            .orderBy("time", descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
@@ -64,9 +64,10 @@ class _ChatRoomState extends State<ChatRoom> {
               (snapshot.hasData && snapshot.data.documents.length == 0))
             return Container();
           return ListView.builder(
-            padding: EdgeInsets.only(bottom: 75,top:5),
+            padding: EdgeInsets.only(bottom: 55, top: 5),
             scrollDirection: Axis.vertical,
-            // shrinkWrap: true,
+            reverse: true,
+            shrinkWrap: true,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               return MessageTile(
@@ -97,17 +98,19 @@ class _ChatRoomState extends State<ChatRoom> {
           .collection("chats")
           .add(messageMap)
           .then(
-            (value) {
-              Firestore.instance.collection("chat_rooms").document(widget.chatRoomId).updateData({
-                "lastMessage":messageMap,
-              });
-            },
-          )
-          .catchError(
-            (error) {
-              print("could not send message");
-            },
-          );
+        (value) {
+          Firestore.instance
+              .collection("chat_rooms")
+              .document(widget.chatRoomId)
+              .updateData({
+            "lastMessage": messageMap,
+          });
+        },
+      ).catchError(
+        (error) {
+          print("could not send message");
+        },
+      );
     }
   }
 
@@ -117,7 +120,7 @@ class _ChatRoomState extends State<ChatRoom> {
     // int _numChar = 0;
 
     return Scaffold(
-      backgroundColor: Colors.white70,
+      // backgroundColor: Colors.white70,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
@@ -139,27 +142,30 @@ class _ChatRoomState extends State<ChatRoom> {
                   color: Colors.transparent,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.transparent,
+                      color: Colors.white,
                       border: Border.all(
                         width: 1,
                         color: Colors.grey,
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5,),
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Row(
                       children: [
                         Expanded(
-                            child: TextFormField(
+                            child: TextField(
                           controller: messageEditingController,
-                          onChanged: (text) {
-                          },
-                          maxLines: 2,
+                          onChanged: (text) {},
+                          minLines: 1,
+                          maxLines: 3,
                           keyboardType: TextInputType.multiline,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                          cursorColor: Colors.white,
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                          cursorColor: Colors.black26,
                           decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.4),
+                            isDense: true,
+                            contentPadding: EdgeInsets.all(8),
+                            hintText: "type message here",
+                            // filled: true,
+                            // fillColor: Colors.grey.withOpacity(0.4),
                             //   labelText: "Message",
                             //   labelStyle: TextStyle(
                             //   color: Colors.white.withOpacity(0.9),
@@ -168,43 +174,54 @@ class _ChatRoomState extends State<ChatRoom> {
                             // counterText: messageEditingController.text.length
                             //         .toString() +
                             //     " characters",
-                            border: InputBorder.none,
-                            // border: OutlineInputBorder(borderSide: BorderSide()),
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(borderSide: BorderSide()),
                           ),
                         )),
                         SizedBox(
                           width: 10,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            sendMessage(messageEditingController.text);
-                            messageEditingController.clear();
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1,
-                                    color: Colors.white.withOpacity(0.5)),
-                                gradient: LinearGradient(
-                                    colors: [
-                                      Colors.grey[600],
-                                      Colors.grey[700],
-                                      // Colors.blue[600], Colors.blue[700]
-                                    ],
-                                    begin: FractionalOffset.topLeft,
-                                    end: FractionalOffset.bottomRight),
-                                borderRadius: BorderRadius.circular(40)),
-                            padding: EdgeInsets.all(12),
-                            child: Image.asset(
-                              "assets/send.png",
-                              height: 25,
-                              width: 25,
+                            onTap: () {
+                              sendMessage(messageEditingController.text);
+                              messageEditingController.clear();
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: CircleAvatar(
+                              radius: 15,
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                child: Image.asset(
+                                  "assets/send.png",
+                                ),
+                              ),
+                            )
+                            // Container(
+                            //   height: 30,
+                            //   width: 30,
+                            //   decoration: BoxDecoration(
+                            //       border: Border.all(
+                            //           width: 1,
+                            //           color: Colors.white.withOpacity(0.7),),
+                            //       gradient: LinearGradient(
+                            //           colors: [
+                            //             Colors.grey[600],
+                            //             Colors.grey[700],
+                            //             // Colors.blue[600], Colors.blue[700]
+                            //           ],
+                            //           begin: FractionalOffset.topLeft,
+                            //           end: FractionalOffset.bottomRight),
+                            //       // borderRadius: BorderRadius.circular(40),
+                            //   ),
+                            //   // padding: EdgeInsets.all(12),
+                            //   child: Image.asset(
+                            //     "assets/send.png",
+                            //     // height: 25,
+                            //     // width: 25,
+                            //     fit: BoxFit.contain,
+                            //   ),
+                            // ),
                             ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -235,28 +252,30 @@ class MessageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _bubbleRoundness = 20;
-
     return Container(
       // decoration: BoxDecoration(
       //   border: Border.all(width: 1, color: Colors.black),
       // ),
       padding: EdgeInsets.only(
-          top: 1,
-          bottom: 1,
-          left: sendByMe ? 50 : 10,
-          right: sendByMe ? 10 : 50,
+        top: 1,
+        bottom: 1,
+        left: sendByMe ? 50 : 10,
+        right: sendByMe ? 10 : 50,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: sendByMe ? CrossAxisAlignment.end:CrossAxisAlignment.start,
+        crossAxisAlignment:
+            sendByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
             margin: sendByMe
                 ? EdgeInsets.only(
                     left: 20,
+                    top: 2,
                   )
                 : EdgeInsets.only(
                     right: 20,
+                    top: 2,
                   ),
             padding: EdgeInsets.only(
               top: 10,
@@ -264,11 +283,10 @@ class MessageTile extends StatelessWidget {
               left: 10,
               right: 10,
             ),
-
             decoration: BoxDecoration(
               border: Border.all(
                 width: 1,
-                color: sendByMe ? Colors.white : Colors.black,
+                color: sendByMe ? Colors.grey : Colors.grey,
               ),
               borderRadius: sendByMe
                   ? BorderRadius.only(
@@ -282,36 +300,32 @@ class MessageTile extends StatelessWidget {
               gradient: LinearGradient(
                 colors: sendByMe
                     ? [Colors.blue[400], Colors.blue[600]]
-                    : [
-                        // Colors.grey[600],
-                        // Colors.grey[900],
-                        Colors.white70,
-                        Colors.white
-                      ],
+                    : [Colors.white70, Colors.white],
               ),
             ),
             child: Text(
               message,
               textAlign: TextAlign.start,
               style: TextStyle(
-                  color: sendByMe ? Colors.white.withOpacity(1) : Colors.black,
-                  fontSize: 16,
-                  fontFamily: 'MuktaRegular',
-                  fontWeight: FontWeight.w300,
+                color: sendByMe ? Colors.white.withOpacity(1) : Colors.black,
+                fontSize: 16,
+                fontFamily: 'MuktaRegular',
+                fontWeight: FontWeight.w300,
                 height: 1.1,
               ),
             ),
           ),
           Container(
             padding: sendByMe
-                ? const EdgeInsets.only(right: 4)
-                : const EdgeInsets.only(left: 4),
+                ? const EdgeInsets.only(right: 4, top: 2)
+                : const EdgeInsets.only(left: 4, top: 2),
             alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
             child: Text(
               DateFormat.Hm('en_US').format(sentDate).toString(),
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.grey,
                 fontStyle: FontStyle.italic,
+                fontSize: 12,
               ),
             ),
           ),
