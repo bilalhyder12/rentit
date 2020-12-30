@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_login_demo/pages/search_display.dart';
 
+import 'authentication.dart';
+
 class SearchAd extends SearchDelegate<String> {
+  SearchAd({Key key, this.auth, this.userId, this.logoutCallback});
+
+  final BaseAuth auth;
+  final VoidCallback logoutCallback;
+  final String userId;
+
   final db = Firestore.instance;
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -55,7 +63,12 @@ class SearchAd extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return SearchDisplay(query: query);
+    return SearchDisplay(
+      query: query,
+      auth: auth,
+      userId: userId,
+      logoutCallback: logoutCallback,
+    );
   }
 
   @override
@@ -86,18 +99,22 @@ class SearchAd extends SearchDelegate<String> {
               return ListView(
                 children: snapshot.data.documents.map((DocumentSnapshot doc) {
                   return ListTile(
-                    title:  Text(
-                        doc['title'],
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    title: Text(
+                      doc['title'],
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     leading: IconButton(
-                      icon: Icon(CupertinoIcons.search,),
+                      icon: Icon(
+                        CupertinoIcons.search,
+                      ),
                       onPressed: () {
                         query = doc['title'];
                       },
                     ),
                     trailing: IconButton(
-                      icon: Icon(CupertinoIcons.arrow_up,),
+                      icon: Icon(
+                        CupertinoIcons.arrow_up,
+                      ),
                       onPressed: () {
                         query = doc['title'];
                       },

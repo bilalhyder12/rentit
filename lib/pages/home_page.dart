@@ -6,7 +6,6 @@ import 'package:flutter_login_demo/pages/profile_page.dart';
 import 'package:flutter_login_demo/services/update_details.dart';
 import 'package:flutter_login_demo/services/search_ad.dart';
 import 'package:flutter_login_demo/views/boost_ad.dart';
-import 'package:flutter_login_demo/views/chat_room.dart';
 import 'package:flutter_login_demo/views/chat_room_list.dart';
 import 'package:flutter_login_demo/views/my_ads.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -251,7 +250,12 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             onPressed: () {
-              showSearch(context: context, delegate: SearchAd());
+              showSearch(
+                  context: context,
+                  delegate: SearchAd(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback));
             },
           )
         ],

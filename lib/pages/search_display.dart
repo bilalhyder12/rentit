@@ -6,8 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'ad_view.dart';
 
-
-
 class SearchDisplay extends StatefulWidget {
   SearchDisplay(
       {Key key, this.auth, this.userId, this.logoutCallback, this.query})
@@ -32,6 +30,20 @@ class _SearchDisplayState extends State<SearchDisplay>
   @override
   void initState() {
     super.initState();
+    saveSearchHistory();
+  }
+
+  void saveSearchHistory() {
+    if (!(query.trim() == "" || query == null)) {
+      db
+          .collection("app_data")
+          .document("search_history")
+          .collection(widget.userId)
+          .add({
+        "time":DateTime.now(),
+        "query":query.trim(),
+      }).then((value) => print("search history updated"));
+    }
   }
 
   @override
@@ -116,7 +128,11 @@ class _SearchDisplayState extends State<SearchDisplay>
                     ),
                   ),
                   onTap: () {
-                    print("user id: "+snapshot.data.documents[index].reference.parent().parent().documentID);
+                    print("user id: " +
+                        snapshot.data.documents[index].reference
+                            .parent()
+                            .parent()
+                            .documentID);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -124,7 +140,10 @@ class _SearchDisplayState extends State<SearchDisplay>
                           userId: widget.userId,
                           auth: widget.auth,
                           logoutCallback: widget.logoutCallback,
-                          adUser: snapshot.data.documents[index].reference.parent().parent().documentID,
+                          adUser: snapshot.data.documents[index].reference
+                              .parent()
+                              .parent()
+                              .documentID,
                           adLink: snapshot.data.documents[index].documentID,
                         ),
                       ),
@@ -134,6 +153,6 @@ class _SearchDisplayState extends State<SearchDisplay>
               });
         });
 
-    return  gridView;
+    return gridView;
   }
 }
