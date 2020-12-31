@@ -25,12 +25,10 @@ class AdViewPage extends StatefulWidget {
   final String adId;
 
   @override
-  State<StatefulWidget> createState() =>
-      _AdViewPageState();
+  State<StatefulWidget> createState() => _AdViewPageState();
 }
 
 class _AdViewPageState extends State<AdViewPage> {
-
   String sellerName = "";
   String _dpImgURL = "";
   final db = Firestore.instance;
@@ -99,7 +97,7 @@ class _AdViewPageState extends State<AdViewPage> {
     await db.collection("Users").document(widget.sellerId).get().then(
       (value) {
         if (value.data.containsKey("fName")) {
-          sellerName = value.data['fName']+" "+value.data['lName'];
+          sellerName = value.data['fName'] + " " + value.data['lName'];
         }
       },
     ).catchError((error) {
@@ -128,26 +126,33 @@ class _AdViewPageState extends State<AdViewPage> {
   }
 
   void createChatRoom(String chatRoomId) async {
-    final DocumentSnapshot result = await db.collection("chat_rooms")
-        .document(chatRoomId).get();
+    final DocumentSnapshot result =
+        await db.collection("chat_rooms").document(chatRoomId).get();
     //check if chat room already present, else create one
-    if(!result.exists) {
+    if (!result.exists) {
       print("creating chat room for the first time");
-      DocumentSnapshot userDetails = await db.collection("Users").document(widget.userId).get();
-      if(userDetails.data.containsKey("fName")){
-        String buyerName = userDetails.data["fName"]+" "+userDetails.data["lName"];
+      DocumentSnapshot userDetails =
+          await db.collection("Users").document(widget.userId).get();
+      if (userDetails.data.containsKey("fName")) {
+        String buyerName =
+            userDetails.data["fName"] + " " + userDetails.data["lName"];
         db.collection("chat_rooms").document(chatRoomId).setData({
-          'adId':widget.adId,
-          'adTitle':data.title.trim(),
-          'buyerId':widget.userId,
+          'adId': widget.adId,
+          'adTitle': data.title.trim(),
+          'buyerId': widget.userId,
           'buyerName': buyerName,
-          'dateCreated':DateTime.now(),
-          'sellerId':widget.sellerId,
-          'sellerName':sellerName,
-          'users':[widget.userId,widget.sellerId]
+          'dateCreated': DateTime.now(),
+          'sellerId': widget.sellerId,
+          'sellerName': sellerName,
+          'users': [widget.userId, widget.sellerId],
+          'lastMessage': {
+            'message:': "Chat Started",
+            'senderId': widget.userId,
+            'seen': false,
+            'time': DateTime.now(),
+          },
         });
-      }
-      else {
+      } else {
         print("Error Creating chat room");
         return;
       }
@@ -173,7 +178,9 @@ class _AdViewPageState extends State<AdViewPage> {
     final double _thickness = 2;
     return Scaffold(
       appBar: AppBar(
-        title: data.title == "" ? Text("Loading Ad") : Text(data.title.capitalizeFirstofEach),
+        title: data.title == ""
+            ? Text("Loading Ad")
+            : Text(data.title.capitalizeFirstofEach),
       ),
       body: data.title == ""
           ? Container()
@@ -219,11 +226,10 @@ class _AdViewPageState extends State<AdViewPage> {
                               Text(
                                 "Rs. " + data.price.round().toString(),
                                 style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.blue,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold
-                                ),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.blue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 data.duration,
@@ -239,22 +245,26 @@ class _AdViewPageState extends State<AdViewPage> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    child:Text(
-                                    "Description: ",
-                                    style: TextStyle(
-                                      decoration: TextDecoration.none,
-                                      color: Colors.black54,
-                                      fontSize: 16,
+                                    child: Text(
+                                      "Description: ",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),width: 95,),
-                                  Expanded(child: Text(
-                                    data.desc,
-                                    style: TextStyle(
-                                      decoration: TextDecoration.none,
-                                      color: Colors.black,
-                                      fontSize: 16,
+                                    width: 95,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      data.desc,
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),)
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -263,22 +273,26 @@ class _AdViewPageState extends State<AdViewPage> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    child:Text(
+                                    child: Text(
                                       "Address: ",
                                       style: TextStyle(
                                         decoration: TextDecoration.none,
                                         color: Colors.black54,
                                         fontSize: 16,
                                       ),
-                                    ),width: 95,),
-                                  Expanded(child: Text(
-                                    data.address,
-                                    style: TextStyle(
-                                      decoration: TextDecoration.none,
-                                      color: Colors.black,
-                                      fontSize: 16,
                                     ),
-                                  ),)
+                                    width: 95,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      data.address,
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -318,7 +332,8 @@ class _AdViewPageState extends State<AdViewPage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              getDetailElement("Location", data.city+","+data.province),
+                              getDetailElement(
+                                  "Location", data.city + "," + data.province),
                             ],
                           ),
                           SizedBox(
@@ -389,8 +404,9 @@ class _AdViewPageState extends State<AdViewPage> {
                                     icon: Icon(Icons.chat),
                                     color: Colors.blue,
                                     iconSize: 30,
-                                    onPressed: (){
-                                      createChatRoom(widget.userId+"_"+data.uid);
+                                    onPressed: () {
+                                      createChatRoom(
+                                          widget.userId + "_" + data.uid);
                                     },
                                   ),
                                 ],
