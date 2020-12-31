@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
+import 'package:flutter_login_demo/views/chat_room.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_login_demo/data/ad_data.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
@@ -13,27 +14,24 @@ class AdViewPage extends StatefulWidget {
       this.auth,
       this.userId,
       this.logoutCallback,
-      this.adUser,
-      this.adLink})
+      this.sellerId,
+      this.adId})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
-  final String adUser;
-  final String adLink;
+  final String sellerId;
+  final String adId;
 
   @override
   State<StatefulWidget> createState() =>
-      _AdViewPageState(adUser: adUser, adLink: adLink);
+      _AdViewPageState();
 }
 
 class _AdViewPageState extends State<AdViewPage> {
-  _AdViewPageState({this.adUser, this.adLink});
 
-  final String adUser;
-  final String adLink;
-  String name = "";
+  String sellerName = "";
   String _dpImgURL = "";
   final db = Firestore.instance;
 
@@ -49,19 +47,19 @@ class _AdViewPageState extends State<AdViewPage> {
 
   @override
   void initState() {
-    initialize();
     super.initState();
+    initialize();
   }
 
   void initialize() async {
     await db
         .collection('ads')
-        .document(adUser)
+        .document(widget.sellerId)
         .collection('user_ads')
-        .document(adLink)
+        .document(widget.adId)
         .get()
         .then((value) {
-      data.uid = adLink;
+      data.uid = widget.adId;
       value.data.forEach(
         (key, value) {
           if (key == "title") {
@@ -98,23 +96,16 @@ class _AdViewPageState extends State<AdViewPage> {
       );
     });
     getDisplayPicture();
-    String fName = "", lName = "";
-    await db.collection("Users").document(adUser).get().then(
+    await db.collection("Users").document(widget.sellerId).get().then(
       (value) {
         if (value.data.containsKey("fName")) {
-          value.data.forEach((key, value) {
-            if (key == "fName") {
-              fName = value;
-            } else if (key == "lName") {
-              lName = value;
-            }
-          });
-
-          name = fName + " " + lName;
-          print(name);
+          sellerName = value.data['fName']+" "+value.data['lName'];
         }
       },
-    );
+    ).catchError((error) {
+      print("Error getting seller's name");
+      print(error.toString());
+    });
     setState(() {
       debugPrint("ad loaded");
     });
@@ -122,7 +113,7 @@ class _AdViewPageState extends State<AdViewPage> {
 
   void getDisplayPicture() {
     StorageReference dpRef = FirebaseStorage.instance.ref().child(
-          'dp/' + adUser,
+          'dp/' + widget.sellerId,
         );
     dpRef.getDownloadURL().then(
       (value) {
@@ -136,15 +127,44 @@ class _AdViewPageState extends State<AdViewPage> {
     });
   }
 
-  void createChatRoom() async {
-    // final QuerySnapshot result = await Firestore.instance
-    //     .collection()
-    //     .where('UID', isEqualTo: name)
-    //     .limit(1)
-    //     .getDocuments();
-    // final List<DocumentSnapshot> documents = result.documents;
-    // return documents.length == 1;
-    //TODO: check and create chat room
+  void createChatRoom(String chatRoomId) async {
+    final DocumentSnapshot result = await db.collection("chat_rooms")
+        .document(chatRoomId).get();
+    //check if chat room already present, else create one
+    if(!result.exists) {
+      print("creating chat room for the first time");
+      DocumentSnapshot userDetails = await db.collection("Users").document(widget.userId).get();
+      if(userDetails.data.containsKey("fName")){
+        String buyerName = userDetails.data["fName"]+" "+userDetails.data["lName"];
+        db.collection("chat_rooms").document(chatRoomId).setData({
+          'adId':widget.adId,
+          'adTitle':data.title.trim(),
+          'buyerId':widget.userId,
+          'buyerName': buyerName,
+          'dateCreated':DateTime.now(),
+          'sellerId':widget.sellerId,
+          'sellerName':sellerName,
+          'users':[widget.userId,widget.sellerId]
+        });
+      }
+      else {
+        print("Error Creating chat room");
+        return;
+      }
+    }
+    print("navigating to chat room");
+    //navigate to the chat room
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatRoom(
+          userId: widget.userId,
+          auth: widget.auth,
+          logoutCallback: widget.logoutCallback,
+          chatRoomId: chatRoomId,
+        ),
+      ),
+    );
   }
 
   @override
@@ -342,7 +362,7 @@ class _AdViewPageState extends State<AdViewPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              name.toUpperCase(),
+                                              sellerName.toUpperCase(),
                                               style: TextStyle(
                                                 decoration: TextDecoration.none,
                                                 color: Colors.black,
@@ -369,8 +389,8 @@ class _AdViewPageState extends State<AdViewPage> {
                                     icon: Icon(Icons.chat),
                                     color: Colors.blue,
                                     iconSize: 30,
-                                    onPressed: () {
-                                      createChatRoom();
+                                    onPressed: (){
+                                      createChatRoom(widget.userId+"_"+data.uid);
                                     },
                                   ),
                                 ],

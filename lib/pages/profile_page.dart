@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                    image: _dpImgURL == "" ? ExactAssetImage('assets/as.png'):NetworkImage(_dpImgURL),
+                                    image: _dpImgURL == "" ? ExactAssetImage('assets/user.png'):NetworkImage(_dpImgURL),
                                     fit: BoxFit.contain,
                                   ),
                                 ),),

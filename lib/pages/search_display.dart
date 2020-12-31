@@ -140,11 +140,11 @@ class _SearchDisplayState extends State<SearchDisplay>
                           userId: widget.userId,
                           auth: widget.auth,
                           logoutCallback: widget.logoutCallback,
-                          adUser: snapshot.data.documents[index].reference
+                          sellerId: snapshot.data.documents[index].reference
                               .parent()
                               .parent()
                               .documentID,
-                          adLink: snapshot.data.documents[index].documentID,
+                          adId: snapshot.data.documents[index].documentID,
                         ),
                       ),
                     );

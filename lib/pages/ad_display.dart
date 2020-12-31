@@ -63,7 +63,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
         },
       );
     });
-    print("Total ads of $selectedCategory: " + user.length.toString());
+    print("Total ads of category \'$selectedCategory\': " + user.length.toString());
     //TODO: Get the ads (links) from database
     for (int i = 0; i < adLinks.length; i++) {
       await db
@@ -80,7 +80,6 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
             if (key == "title") {
               temp.title = value;
             } else if (key == "price") {
-              print(value);
               temp.price = double.parse(value.toString());
             } else if (key == "imageURLs") {
               temp.thumbnail = value[0];
@@ -90,7 +89,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
         ads.add(temp);
       });
     }
-    print("loaded");
+    print("data loaded");
     setState(() {
       _isLoading = false;
     });
@@ -198,8 +197,8 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
                           userId: widget.userId,
                           auth: widget.auth,
                           logoutCallback: widget.logoutCallback,
-                          adUser: user[index],
-                          adLink: adLinks[index],
+                          sellerId: user[index],
+                          adId: adLinks[index],
                         )),
               );
             },
