@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:intl/intl.dart';
 
@@ -24,14 +25,37 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   TextEditingController messageEditingController = new TextEditingController();
 
+  final db = Firestore.instance;
+  String title = "loading";
+  String adId;
+  String sellerId;
+  String sellerName;
+
   @override
   void initState() {
     super.initState();
+    initialize();
+  }
+
+  void initialize() async {
+    await db
+        .collection("chat_rooms")
+        .document(widget.chatRoomId)
+        .get()
+        .then((value) {
+      title = value.data["adTitle"] ?? "";
+      adId = value.data["adId"] ?? "";
+      sellerId = value.data["sellerId"];
+      sellerName = value.data["sellerName"];
+      setState(() {
+        print("chat room data loaded");
+      });
+    });
   }
 
   Widget chatMessages() {
     return StreamBuilder(
-        stream: Firestore.instance
+        stream: db
             .collection("chat_rooms")
             .document(widget.chatRoomId)
             .collection("chats")
@@ -64,7 +88,7 @@ class _ChatRoomState extends State<ChatRoom> {
               (snapshot.hasData && snapshot.data.documents.length == 0))
             return Container();
           return ListView.builder(
-            padding: EdgeInsets.only(bottom: 55, top: 5),
+            padding: EdgeInsets.only(bottom: 55, top: 30),
             scrollDirection: Axis.vertical,
             reverse: true,
             shrinkWrap: true,
@@ -92,19 +116,21 @@ class _ChatRoomState extends State<ChatRoom> {
         "seen": false,
       };
 
-      Firestore.instance
+      db
           .collection("chat_rooms")
           .document(widget.chatRoomId)
           .collection("chats")
           .add(messageMap)
           .then(
         (value) {
-          Firestore.instance
-              .collection("chat_rooms")
-              .document(widget.chatRoomId)
-              .updateData({
-            "lastMessage": messageMap,
-          });
+          print("message sent");
+          db.collection("chat_rooms").document(widget.chatRoomId).updateData(
+            {
+              "lastMessage": messageMap,
+            },
+          ).then(
+            (value) => print("last message field updated"),
+          );
         },
       ).catchError(
         (error) {
@@ -128,13 +154,59 @@ class _ChatRoomState extends State<ChatRoom> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text("Chat"),
+        title: Text(
+          sellerName ?? "Loading",
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         child: Container(
           child: Stack(
             children: [
               chatMessages(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey,
+                  ),
+                  boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 10,spreadRadius: 2)],
+                ),
+                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                alignment: Alignment.topCenter,
+                width: MediaQuery.of(context).size.width,
+                height: 25,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            text: 'Ad Title: ',
+                            style: TextStyle(color: Colors.black,),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: title ?? "",
+                                style: TextStyle(color: Colors.black54),
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
+                    GestureDetector(
+                      child: Text(
+                        "View Ad",
+                        style: TextStyle(color: Colors.blue,fontStyle: FontStyle.italic),
+                      ),
+                      onTap: () {
+                        print("test");
+                      },
+                    ),
+                  ],
+                ),
+              ),
               Container(
                 alignment: Alignment.bottomCenter,
                 width: MediaQuery.of(context).size.width,
@@ -175,53 +247,29 @@ class _ChatRoomState extends State<ChatRoom> {
                             //         .toString() +
                             //     " characters",
                             // border: InputBorder.none,
-                            border: OutlineInputBorder(borderSide: BorderSide()),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide()),
                           ),
                         )),
                         SizedBox(
                           width: 10,
                         ),
                         GestureDetector(
-                            onTap: () {
-                              sendMessage(messageEditingController.text);
-                              messageEditingController.clear();
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: CircleAvatar(
-                              radius: 15,
-                              child: Container(
-                                padding: EdgeInsets.all(8),
-                                child: Image.asset(
-                                  "assets/send.png",
-                                ),
+                          onTap: () {
+                            sendMessage(messageEditingController.text);
+                            messageEditingController.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: CircleAvatar(
+                            radius: 15,
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              child: Image.asset(
+                                "assets/send.png",
                               ),
-                            )
-                            // Container(
-                            //   height: 30,
-                            //   width: 30,
-                            //   decoration: BoxDecoration(
-                            //       border: Border.all(
-                            //           width: 1,
-                            //           color: Colors.white.withOpacity(0.7),),
-                            //       gradient: LinearGradient(
-                            //           colors: [
-                            //             Colors.grey[600],
-                            //             Colors.grey[700],
-                            //             // Colors.blue[600], Colors.blue[700]
-                            //           ],
-                            //           begin: FractionalOffset.topLeft,
-                            //           end: FractionalOffset.bottomRight),
-                            //       // borderRadius: BorderRadius.circular(40),
-                            //   ),
-                            //   // padding: EdgeInsets.all(12),
-                            //   child: Image.asset(
-                            //     "assets/send.png",
-                            //     // height: 25,
-                            //     // width: 25,
-                            //     fit: BoxFit.contain,
-                            //   ),
-                            // ),
                             ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
