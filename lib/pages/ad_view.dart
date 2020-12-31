@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/chat_room.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_login_demo/data/ad_data.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdViewPage extends StatefulWidget {
   AdViewPage(
@@ -30,6 +32,7 @@ class AdViewPage extends StatefulWidget {
 
 class _AdViewPageState extends State<AdViewPage> {
   String sellerName = "";
+  String mNumber = "";
   String _dpImgURL = "";
   final db = Firestore.instance;
 
@@ -98,6 +101,7 @@ class _AdViewPageState extends State<AdViewPage> {
       (value) {
         if (value.data.containsKey("fName")) {
           sellerName = value.data['fName'] + " " + value.data['lName'];
+          mNumber = value.data['mNumber'];
         }
       },
     ).catchError((error) {
@@ -184,280 +188,317 @@ class _AdViewPageState extends State<AdViewPage> {
       ),
       body: data.title == ""
           ? Container()
-          : Container(
-              padding: const EdgeInsets.all(10),
-              width: screenSize.width,
-              height: screenSize.height,
-              decoration: BoxDecoration(color: Colors.white),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: screenSize.height * 0.3,
-                      child: Swiper(
-                        autoplay: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Image.network(
-                            data.imageURL[index],
-                            fit: BoxFit.fitHeight,
-                          );
-                        },
-                        itemCount: data.imageURL.length,
-                        // itemCount: 0,
-                        viewportFraction: 0.8,
-                        scale: 0.9,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(color: Colors.white),
-                      width: screenSize.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
+          : Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: screenSize.width,
+                  height: screenSize.height,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: screenSize.height * 0.3,
+                          child: Swiper(
+                            autoplay: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Image.network(
+                                data.imageURL[index],
+                                fit: BoxFit.fitHeight,
+                              );
+                            },
+                            itemCount: data.imageURL.length,
+                            // itemCount: 0,
+                            viewportFraction: 0.8,
+                            scale: 0.9,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(color: Colors.white),
+                          width: screenSize.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "Rs. " + data.price.round().toString(),
+                                    style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.blue,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    data.duration,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        child: Text(
+                                          "Description: ",
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            color: Colors.black54,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        width: 95,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          data.desc,
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        child: Text(
+                                          "Address: ",
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            color: Colors.black54,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        width: 95,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          data.address,
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: 15,
                               ),
-                              Text(
-                                "Rs. " + data.price.round().toString(),
-                                style: TextStyle(
-                                    decoration: TextDecoration.none,
-                                    color: Colors.blue,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                data.duration,
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                ),
+                              Divider(
+                                color: Colors.grey[400],
+                                thickness: _thickness,
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Description: ",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        color: Colors.black54,
-                                        fontSize: 16,
-                                      ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Details",
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.blue,
+                                      fontSize: 20,
                                     ),
-                                    width: 95,
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      data.desc,
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  )
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  getDetailElement("Category", data.category),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  getDetailElement("Location",
+                                      data.city + "," + data.province),
                                 ],
                               ),
                               SizedBox(
-                                height: 5,
+                                height: 15,
                               ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Address: ",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        color: Colors.black54,
-                                        fontSize: 16,
-                                      ),
+                              Divider(
+                                color: Colors.grey[400],
+                                thickness: _thickness,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Seller Description",
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.blue,
+                                      fontSize: 20,
                                     ),
-                                    width: 95,
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      data.address,
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Divider(
-                            color: Colors.grey[400],
-                            thickness: _thickness,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Details",
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.blue,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              getDetailElement("Category", data.category),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              getDetailElement(
-                                  "Location", data.city + "," + data.province),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Divider(
-                            color: Colors.grey[400],
-                            thickness: _thickness,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Seller Description",
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.blue,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        getDP(),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      Container(
+                                        child: Row(
                                           children: [
-                                            Text(
-                                              sellerName.toUpperCase(),
-                                              style: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                              ),
-                                            ),
+                                            getDP(),
                                             SizedBox(
-                                              height: 5,
+                                              width: 10,
                                             ),
-                                            Text(
-                                              "View Profile",
-                                              style: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Colors.black54,
-                                                fontSize: 16,
-                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  sellerName.toUpperCase(),
+                                                  style: TextStyle(
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  "View Profile",
+                                                  style: TextStyle(
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                    color: Colors.black54,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  widget.sellerId.contains(widget.userId) ? Container():IconButton(
-                                    icon: Icon(Icons.chat),
-                                    color: Colors.blue,
-                                    iconSize: 30,
-                                    onPressed: () {
-                                      createChatRoom(
-                                          widget.userId + "_" + data.uid);
-                                    },
+                                  SizedBox(
+                                    height: 10,
                                   ),
                                 ],
                               ),
                               SizedBox(
                                 height: 10,
                               ),
+                              Divider(
+                                color: Colors.grey[400],
+                                thickness: _thickness,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "Date: " +
+                                        DateFormat.yMMMMd('en_US')
+                                            .format(data.date)
+                                            .toString(),
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Time: " +
+                                        DateFormat.jm()
+                                            .format(data.date)
+                                            .toString(),
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Divider(
-                            color: Colors.grey[400],
-                            thickness: _thickness,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                "Date: " +
-                                    DateFormat.yMMMMd('en_US')
-                                        .format(data.date)
-                                        .toString(),
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              Text(
-                                "Time: " +
-                                    DateFormat.jm()
-                                        .format(data.date)
-                                        .toString(),
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                widget.sellerId.contains(widget.userId)
+                    ? Container()
+                    :Positioned(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey, spreadRadius: 2, blurRadius: 3)
+                      ],
+                      color: Colors.blue,
+                    ),
+                    child:  IconButton(icon: Icon(Icons.chat,color: Colors.white,),iconSize: 25,onPressed: (){
+                      createChatRoom(widget.userId +
+                          "_" +
+                          data.uid);
+                    },),
+                  ),
+                  bottom: 67,
+                  right: 5,
+                ),
+                Positioned(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey, spreadRadius: 2, blurRadius: 3)
+                      ],
+                      color: Colors.blue,
+                    ),
+                    child: IconButton(icon: Icon(Icons.call,color: Colors.white,),iconSize: 25,onPressed: (){
+                      print("calling");
+                      launch('tel://'+mNumber);
+                    },),
+                  ),
+                  bottom: 15,
+                  right: 5,
+                )
+              ],
             ),
     );
   }
