@@ -146,7 +146,7 @@ class _AdViewPageState extends State<AdViewPage> {
           'sellerName': sellerName,
           'users': [widget.userId, widget.sellerId],
           'lastMessage': {
-            'message:': "Chat Started",
+            'message': "Chat Started",
             'senderId': widget.userId,
             'seen': false,
             'time': DateTime.now(),
