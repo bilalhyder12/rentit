@@ -201,7 +201,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget getView(String pageName) {
     if (pageName == "Home") {
-      return HomeView();
+      return HomeView(
+        userId: widget.userId,
+        auth: widget.auth,
+        logoutCallback: widget.logoutCallback,
+      );
     } else if (pageName == "MyAds") {
       return MyAds(
         userId: widget.userId,
