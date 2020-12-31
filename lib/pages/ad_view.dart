@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -108,6 +109,9 @@ class _AdViewPageState extends State<AdViewPage> {
       print("Error getting seller's name");
       print(error.toString());
     });
+    db.collection("ads").document(widget.sellerId).collection("user_ads").document(widget.adId).setData({
+      'views':FieldValue.increment(1),
+    },merge: true);
     setState(() {
       debugPrint("ad loaded");
     });
