@@ -4,6 +4,7 @@ import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_login_demo/services/string_caps.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ChatRoom extends StatefulWidget {
   ChatRoom(
@@ -27,7 +28,7 @@ class _ChatRoomState extends State<ChatRoom> {
   TextEditingController messageEditingController = new TextEditingController();
 
   final db = Firestore.instance;
-  String title = "";
+  String title = "Loading";
   String adId;
   String sellerId;
   String sellerName = "";
@@ -91,7 +92,17 @@ class _ChatRoomState extends State<ChatRoom> {
               style: TextStyle(color: Colors.blue,fontStyle: FontStyle.italic),
             ),
             onTap: () {
-              print("test");
+              //same user and seller being passed
+              showCupertinoModalBottomSheet(
+                context: context,
+                duration: Duration(milliseconds: 800),
+                builder: (context) => AdViewPage(
+                  userId: widget.userId,
+                  auth: widget.auth,
+                  logoutCallback: widget.logoutCallback,
+                  sellerId: sellerId,
+                  adId: adId,),
+              );
             },
           ),
         ],
