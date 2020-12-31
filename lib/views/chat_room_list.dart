@@ -98,7 +98,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
       ));
     }
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -173,9 +173,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
         messagedAt.year == currDate.year) {
       return DateFormat.jm().format(messagedAt);
     }
-    else if((currDate.day - messagedAt.day <= 1) &&
-        messagedAt.month == currDate.month &&
-        messagedAt.year == currDate.year){
+    else if(currDate.difference(messagedAt).inDays < 1 ){
       return "Yesterday";
     }
     return DateFormat('d-M-yy').format(messagedAt);
@@ -195,7 +193,12 @@ class _ChatRoomListState extends State<ChatRoomList> {
       shrinkWrap: true,
       children: snapshot.data.documents.map(
         (doc) {
-          return ListTile(
+          return Container(
+            decoration: BoxDecoration(
+              border: Border(
+              bottom: BorderSide(width: 0.5, color: Colors.grey,),
+              ),),
+            child:ListTile(
             dense: true,
             onTap: () {
               Navigator.push(
@@ -213,21 +216,21 @@ class _ChatRoomListState extends State<ChatRoomList> {
             leading: CircleAvatar(
               child: userName.contains(doc["buyerName"])
                   ? Text(
-                      getInitials(
-                        doc["sellerName"],
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    )
+                getInitials(
+                  doc["sellerName"],
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )
                   : Text(
-                      getInitials(
-                        doc["buyerName"],
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                getInitials(
+                  doc["buyerName"],
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
               backgroundColor: Colors.blue,
             ),
             title: Text(
@@ -241,29 +244,29 @@ class _ChatRoomListState extends State<ChatRoomList> {
             ),
             subtitle: doc["lastMessage"]["senderId"] == widget.userId
                 ? RichText(
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      text: 'You: ',
-                      style: TextStyle(color: Colors.black87),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: doc["lastMessage"]["message"],
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                : Text(
-                    doc["lastMessage"]["message"],
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: 'You: ',
+                style: TextStyle(color: Colors.black87),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: doc["lastMessage"]["message"],
                     style: TextStyle(color: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
                   ),
+                ],
+              ),
+            )
+                : Text(
+              doc["lastMessage"]["message"],
+              style: TextStyle(color: Colors.grey),
+              overflow: TextOverflow.ellipsis,
+            ),
             trailing: Text(
               getDate(
                 doc['lastMessage']['time'].toDate(),
               ),
             ),
-          );
+          ),);
         },
       ).toList(),
     );

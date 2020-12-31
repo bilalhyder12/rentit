@@ -400,7 +400,7 @@ class _AdViewPageState extends State<AdViewPage> {
                                       ],
                                     ),
                                   ),
-                                  IconButton(
+                                  widget.sellerId.contains(widget.userId) ? Container():IconButton(
                                     icon: Icon(Icons.chat),
                                     color: Colors.blue,
                                     iconSize: 30,
