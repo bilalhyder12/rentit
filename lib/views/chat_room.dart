@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_login_demo/services/string_caps.dart';
 
 class ChatRoom extends StatefulWidget {
   ChatRoom(
@@ -26,10 +27,10 @@ class _ChatRoomState extends State<ChatRoom> {
   TextEditingController messageEditingController = new TextEditingController();
 
   final db = Firestore.instance;
-  String title = "loading";
+  String title = "";
   String adId;
   String sellerId;
-  String sellerName;
+  String sellerName = "";
 
   @override
   void initState() {
@@ -51,6 +52,123 @@ class _ChatRoomState extends State<ChatRoom> {
         print("chat room data loaded");
       });
     });
+  }
+
+  Widget getTopBar(){
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          width: 1,
+          color: Colors.grey,
+        ),
+        boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 10,spreadRadius: 2)],
+      ),
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      alignment: Alignment.topCenter,
+      width: MediaQuery.of(context).size.width,
+      height: 30,
+      child: Row(
+        children: [
+          Expanded(
+              child: RichText(
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  text: 'Ad Title: ',
+                  style: TextStyle(color: Colors.black,),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: title.capitalizeFirstofEach,
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ],
+                ),
+              )
+          ),
+          GestureDetector(
+            child: Text(
+              "View Ad",
+              style: TextStyle(color: Colors.blue,fontStyle: FontStyle.italic),
+            ),
+            onTap: () {
+              print("test");
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getChatBox(){
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        color: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              width: 1,
+              color: Colors.grey,
+            ),
+            boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 5,spreadRadius: 1)],
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          child: Row(
+            children: [
+              Expanded(
+                  child: TextField(
+                    controller: messageEditingController,
+                    onChanged: (text) {},
+                    minLines: 1,
+                    maxLines: 3,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    cursorColor: Colors.black26,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(8),
+                      hintText: "type message here",
+                      // filled: true,
+                      // fillColor: Colors.grey.withOpacity(0.4),
+                      //   labelText: "Message",
+                      //   labelStyle: TextStyle(
+                      //   color: Colors.white.withOpacity(0.9),
+                      //   fontSize: 16,
+                      // ),
+                      // counterText: messageEditingController.text.length
+                      //         .toString() +
+                      //     " characters",
+                      // border: InputBorder.none,
+                      border:
+                      OutlineInputBorder(borderSide: BorderSide()),
+                    ),
+                  )),
+              SizedBox(
+                width: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  sendMessage(messageEditingController.text);
+                  messageEditingController.clear();
+                  FocusScope.of(context).unfocus();
+                },
+                child: CircleAvatar(
+                  radius: 15,
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Image.asset(
+                      "assets/send.png",
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget chatMessages() {
@@ -88,7 +206,7 @@ class _ChatRoomState extends State<ChatRoom> {
               (snapshot.hasData && snapshot.data.documents.length == 0))
             return Container();
           return ListView.builder(
-            padding: EdgeInsets.only(bottom: 55, top: 30),
+            padding: EdgeInsets.only(bottom: 55, top: 35),
             scrollDirection: Axis.vertical,
             reverse: true,
             shrinkWrap: true,
@@ -155,7 +273,7 @@ class _ChatRoomState extends State<ChatRoom> {
           },
         ),
         title: Text(
-          sellerName ?? "Loading",
+          sellerName,
           overflow: TextOverflow.ellipsis,
         ),
       ),
@@ -165,116 +283,8 @@ class _ChatRoomState extends State<ChatRoom> {
           child: Stack(
             children: [
               chatMessages(),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.grey,
-                  ),
-                  boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 10,spreadRadius: 2)],
-                ),
-                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                alignment: Alignment.topCenter,
-                width: MediaQuery.of(context).size.width,
-                height: 25,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                            text: 'Ad Title: ',
-                            style: TextStyle(color: Colors.black,),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: title ?? "",
-                                style: TextStyle(color: Colors.black54),
-                              ),
-                            ],
-                          ),
-                        )
-                    ),
-                    GestureDetector(
-                      child: Text(
-                        "View Ad",
-                        style: TextStyle(color: Colors.blue,fontStyle: FontStyle.italic),
-                      ),
-                      onTap: () {
-                        print("test");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  color: Colors.transparent,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: TextField(
-                          controller: messageEditingController,
-                          onChanged: (text) {},
-                          minLines: 1,
-                          maxLines: 3,
-                          keyboardType: TextInputType.multiline,
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                          cursorColor: Colors.black26,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.all(8),
-                            hintText: "type message here",
-                            // filled: true,
-                            // fillColor: Colors.grey.withOpacity(0.4),
-                            //   labelText: "Message",
-                            //   labelStyle: TextStyle(
-                            //   color: Colors.white.withOpacity(0.9),
-                            //   fontSize: 16,
-                            // ),
-                            // counterText: messageEditingController.text.length
-                            //         .toString() +
-                            //     " characters",
-                            // border: InputBorder.none,
-                            border:
-                                OutlineInputBorder(borderSide: BorderSide()),
-                          ),
-                        )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            sendMessage(messageEditingController.text);
-                            messageEditingController.clear();
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: CircleAvatar(
-                            radius: 15,
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              child: Image.asset(
-                                "assets/send.png",
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              getTopBar(),
+              getChatBox(),
             ],
           ),
         ),
