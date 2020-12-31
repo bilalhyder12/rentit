@@ -12,6 +12,8 @@ import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/views/home.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import 'feedback.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
@@ -173,7 +175,15 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blue,
               ),
               title: Text('Feedback'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  duration: Duration(milliseconds: 800),
+                  builder: (context) => FeedbackForm( auth: widget.auth,
+                    userId: widget.userId,
+                    logoutCallback: widget.logoutCallback,),
+                )
+              },
             ),
             ListTile(
               leading: Icon(
@@ -218,19 +228,6 @@ class _HomePageState extends State<HomePage> {
         userId: widget.userId,
         logoutCallback: widget.logoutCallback,
       );
-      // Center(
-//        child:
-//        RaisedButton(
-//          child: Text("TestUpload"),
-//          onPressed: () {
-//            testUpload();
-//          } ,
-//        )
-//         child: Text(
-//           "New Update messeages",
-//           style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
-//         ),
-//       );
     }
 
     return Center(
