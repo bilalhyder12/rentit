@@ -63,7 +63,8 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
         },
       );
     });
-    print("Total ads of category \'$selectedCategory\': " + user.length.toString());
+    print("Total ads of category \'$selectedCategory\': " +
+        user.length.toString());
     //TODO: Get the ads (links) from database
     for (int i = 0; i < adLinks.length; i++) {
       await db
@@ -119,40 +120,61 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
     );
 
     var listItem = ListView.builder(
+      //TODO: under construction list view
       itemCount: user.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           title: Card(
             elevation: 5.0,
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Text("Title $index"),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 10,
+                ),
+                Container(
+                  decoration: BoxDecoration(border: Border.all(color: Colors.red,width: 1)),
+                  child:FadeInImage.memoryNetwork(
+                  width: _size - 20,
+                  height: _size - 20,
+                  fit: BoxFit.contain,
+                  placeholder: kTransparentImage,
+                  image: ads[index].thumbnail,
+                ),),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(border: Border.all(color: Colors.red,width: 1)),
+                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          ads[index].title.trim().capitalizeFirstofEach,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text("Rs " + ads[index].price.round().toString()),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           onTap: () {
-            showDialog(
-                barrierDismissible: false,
-                context: context,
-                child: CupertinoAlertDialog(
-                  title: Column(
-                    children: <Widget>[
-                      Text("ListView"),
-                      Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                    ],
-                  ),
-                  content: Text("Selected Item $index"),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("OK"))
-                  ],
-                ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AdViewPage(
+                    userId: widget.userId,
+                    auth: widget.auth,
+                    logoutCallback: widget.logoutCallback,
+                    sellerId: user[index],
+                    adId: adLinks[index],
+                  )),
+            );
           },
         );
       },
