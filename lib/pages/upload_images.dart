@@ -263,7 +263,7 @@ class _UploadImagesState extends State<UploadImages> {
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
           actionBarColor: "#abcdef",
-          actionBarTitle: "Example App",
+          actionBarTitle: "Select Images",
           allViewTitle: "All Photos",
           useDetailsView: false,
           selectCircleStrokeColor: "#000000",
@@ -416,12 +416,12 @@ class _UploadImagesState extends State<UploadImages> {
           await docRef
               .setData(
             {
-              'category': widget.data.category,
-              'title': widget.data.title,
-              'desc': widget.data.desc,
+              'category': widget.data.category.trim(),
+              'title': widget.data.title.trim(),
+              'desc': widget.data.desc.trim(),
               'price': widget.data.price,
               'duration': widget.data.duration,
-              'address':widget.data.address,
+              'address':widget.data.address.trim(),
               'province': widget.data.province,
               'city': widget.data.city,
               'imageURLs':imageURLs,

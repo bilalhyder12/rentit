@@ -178,7 +178,7 @@ class _AdDisplayState extends State<AdDisplay> with TickerProviderStateMixin {
                   ),
                   Padding(
                     child: Text(
-                      ads[index].title.capitalizeFirstofEach,
+                      ads[index].title.trim().capitalizeFirstofEach,
                       overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
