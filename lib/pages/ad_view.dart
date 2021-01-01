@@ -484,7 +484,9 @@ class _AdViewPageState extends State<AdViewPage> {
                   bottom: 67,
                   right: 5,
                 ),
-                Positioned(
+                widget.sellerId.contains(widget.userId)
+                    ? Container()
+                    :Positioned(
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
