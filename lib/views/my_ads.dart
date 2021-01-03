@@ -117,7 +117,9 @@ class _MyAdsState extends State<MyAds> {
       children: snapshot.data.documents
           .map(
             (doc) => Container(
+              margin: EdgeInsets.symmetric(vertical: 3.0),
               child: Card(
+                elevation: 10,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   side: BorderSide(color: Colors.grey, width: 1),
@@ -136,6 +138,7 @@ class _MyAdsState extends State<MyAds> {
                             height: 110,
                             width: 110,
                             decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.35),
                               border: Border.all(
                                 color: Colors.blue,
                               ),
@@ -157,14 +160,14 @@ class _MyAdsState extends State<MyAds> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
+                                 Text(
                                     doc['title']
                                         .toString()
                                         .capitalizeFirstofEach,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue,
-                                      fontSize: 20,
+                                      fontSize: 18,
                                     ),
                                   ),
                                   Container(
@@ -176,15 +179,22 @@ class _MyAdsState extends State<MyAds> {
                                         "Rs. ",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 15,
                                         ),
                                       ),
                                       Text(
-                                        doc['price'].toString(),
+                                        doc['price'].round().toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),
                                   Text(
                                     doc['duration'].toString(),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   )
                                 ],
                               ),
@@ -206,7 +216,7 @@ class _MyAdsState extends State<MyAds> {
                     ),
                     Positioned(
                       top: 5,
-                      right: 10,
+                      right: 0,
                       child: IconButton(
                         icon: Icon(
                           CupertinoIcons.delete,
@@ -237,15 +247,16 @@ class _MyAdsState extends State<MyAds> {
                   ],
                 ),
               ),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10.0,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(12.0),
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.grey.withOpacity(0.7),
+              //       blurRadius: 5.0,
+              //       spreadRadius: 1,
+              //     ),
+              //   ],
+              // ),
             ),
           )
           .toList(),
