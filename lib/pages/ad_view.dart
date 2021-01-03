@@ -188,7 +188,7 @@ class _AdViewPageState extends State<AdViewPage> {
       appBar: AppBar(
         title: data.title == ""
             ? Text("Loading Ad")
-            : Text(data.title.capitalizeFirstofEach),
+            : Text(data.title.trim().capitalizeFirstofEach),
       ),
       body: data.title == ""
           ? Container()
