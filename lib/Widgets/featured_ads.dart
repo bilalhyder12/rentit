@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_login_demo/pages/ad_view.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 
 class FeaturedAds extends StatefulWidget {
@@ -48,7 +49,23 @@ class _FeaturedAdsState extends State<FeaturedAds> {
     if (mounted) {
       setState(() {
         imageSliders = imgList
-            .map((item) => Container(
+            .map(
+              (item) => GestureDetector(
+                onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdViewPage(
+                userId: widget.userId,
+                auth: widget.auth,
+                logoutCallback: widget.logoutCallback,
+                sellerId: owns[imgList.indexOf(item)]['user'],
+                adId: owns[imgList.indexOf(item)]['ad'],
+              ),
+            ),
+          );
+                },
+                child: Container(
                   child: Container(
                     margin: EdgeInsets.all(5.0),
                     child: ClipRRect(
@@ -87,7 +104,9 @@ class _FeaturedAdsState extends State<FeaturedAds> {
                           ],
                         )),
                   ),
-                ))
+                ),
+              ),
+            )
             .toList();
       });
     }
